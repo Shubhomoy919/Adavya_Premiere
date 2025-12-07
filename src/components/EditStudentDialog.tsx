@@ -15,7 +15,7 @@ interface EditStudentDialogProps {
   student: Student | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSave: (id: string, rollNo: string, name: string, points: number) => Promise<void>;
+  onSave: (id: string, rollNo: string, points: number) => Promise<void>;
 }
 
 export function EditStudentDialog({
@@ -25,14 +25,12 @@ export function EditStudentDialog({
   onSave,
 }: EditStudentDialogProps) {
   const [rollNo, setRollNo] = useState(student?.roll_no || "");
-  const [name, setName] = useState(student?.name || "");
   const [points, setPoints] = useState(student?.points?.toString() || "0");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Update form when student changes
   if (student && rollNo !== student.roll_no) {
     setRollNo(student.roll_no);
-    setName(student.name || "");
     setPoints(student.points.toString());
   }
 
@@ -42,7 +40,7 @@ export function EditStudentDialog({
 
     setIsSubmitting(true);
     try {
-      await onSave(student.id, rollNo.trim().toUpperCase(), name.trim(), parseInt(points, 10));
+      await onSave(student.id, rollNo.trim().toUpperCase(), parseInt(points, 10));
       onOpenChange(false);
     } finally {
       setIsSubmitting(false);
@@ -67,18 +65,6 @@ export function EditStudentDialog({
               onChange={(e) => setRollNo(e.target.value)}
               required
               className="uppercase text-base"
-            />
-          </div>
-
-          <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="edit-name" className="font-body text-xs sm:text-sm text-muted-foreground">
-              Name (Optional)
-            </Label>
-            <Input
-              id="edit-name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="text-base"
             />
           </div>
 

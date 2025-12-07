@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 export interface Student {
   id: string;
   roll_no: string;
-  name: string | null;
   points: number;
   created_at: string;
   updated_at: string;
@@ -36,7 +35,7 @@ export function useStudents() {
     }
   };
 
-  const addStudent = async (rollNo: string, name: string, points: number) => {
+  const addStudent = async (rollNo: string, points: number) => {
     try {
       // Check if student exists
       const { data: existing } = await supabase
@@ -50,8 +49,7 @@ export function useStudents() {
         const { error } = await supabase
           .from("students")
           .update({ 
-            points: existing.points + points,
-            name: name || undefined 
+            points: existing.points + points
           })
           .eq("id", existing.id);
 
@@ -64,7 +62,7 @@ export function useStudents() {
         // Create new student
         const { error } = await supabase
           .from("students")
-          .insert({ roll_no: rollNo, name: name || null, points });
+          .insert({ roll_no: rollNo, points });
 
         if (error) throw error;
         toast({
@@ -82,11 +80,11 @@ export function useStudents() {
     }
   };
 
-  const updateStudent = async (id: string, rollNo: string, name: string, points: number) => {
+  const updateStudent = async (id: string, rollNo: string, points: number) => {
     try {
       const { error } = await supabase
         .from("students")
-        .update({ roll_no: rollNo, name: name || null, points })
+        .update({ roll_no: rollNo, points })
         .eq("id", id);
 
       if (error) throw error;

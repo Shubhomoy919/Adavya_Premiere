@@ -18,23 +18,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Pencil, Trash2, Medal, Trophy, Award, Loader2 } from "lucide-react";
+import { Pencil, Trash2, Loader2 } from "lucide-react";
 import type { Student } from "@/hooks/useStudents";
 import { EditStudentDialog } from "./EditStudentDialog";
 
 interface PointsTableProps {
   students: Student[];
   loading: boolean;
-  onUpdate: (id: string, rollNo: string, name: string, points: number) => Promise<void>;
+  onUpdate: (id: string, rollNo: string, points: number) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
 }
 
-function getRankIcon(index: number) {
-  if (index === 0) return <Trophy className="h-5 w-5 text-gold" />;
-  if (index === 1) return <Medal className="h-5 w-5 text-muted-foreground" />;
-  if (index === 2) return <Award className="h-5 w-5 text-amber-700" />;
-  return <span className="text-muted-foreground font-body">{index + 1}</span>;
-}
 
 export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTableProps) {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
@@ -78,7 +72,6 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
 
         {students.length === 0 ? (
           <div className="p-8 sm:p-12 text-center">
-            <Trophy className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/30 mx-auto mb-4" />
             <p className="font-body text-muted-foreground text-base sm:text-lg">
               No students yet. Add some points to get started!
             </p>
@@ -93,14 +86,11 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                   className="p-4 flex items-center gap-3 hover:bg-secondary/30 transition-colors"
                 >
                   <div className="flex-shrink-0 w-8 text-center">
-                    {getRankIcon(index)}
+                    <span className="text-muted-foreground font-body">{index + 1}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body font-semibold text-foreground truncate">
                       {student.roll_no}
-                    </p>
-                    <p className="font-body text-sm text-muted-foreground truncate">
-                      {student.name || "No name"}
                     </p>
                   </div>
                   <div className="flex-shrink-0 text-right">
@@ -138,13 +128,10 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                     <TableHead className="w-16 font-display text-xs uppercase tracking-wider text-muted-foreground">
                       Rank
                     </TableHead>
-                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
+                    <TableHead className="text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
                       Roll No
                     </TableHead>
-                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
-                      Name
-                    </TableHead>
-                    <TableHead className="text-right font-display text-xs uppercase tracking-wider text-muted-foreground">
+                    <TableHead className="text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
                       Points
                     </TableHead>
                     <TableHead className="w-24 text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
@@ -158,14 +145,13 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                       key={student.id}
                       className="border-border hover:bg-secondary/50 transition-colors"
                     >
-                      <TableCell className="text-center">{getRankIcon(index)}</TableCell>
-                      <TableCell className="font-body font-semibold text-foreground">
+                      <TableCell className="text-center">
+                        <span className="text-muted-foreground font-body">{index + 1}</span>
+                      </TableCell>
+                      <TableCell className="text-center font-body font-semibold text-foreground">
                         {student.roll_no}
                       </TableCell>
-                      <TableCell className="font-body text-muted-foreground">
-                        {student.name || "—"}
-                      </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-center">
                         <span className="font-display font-bold text-lg text-gold">
                           {student.points}
                         </span>

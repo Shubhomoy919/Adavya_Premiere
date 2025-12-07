@@ -5,12 +5,11 @@ import { Label } from "@/components/ui/label";
 import { Plus, Loader2 } from "lucide-react";
 
 interface PointsFormProps {
-  onSubmit: (rollNo: string, name: string, points: number) => Promise<void>;
+  onSubmit: (rollNo: string, points: number) => Promise<void>;
 }
 
 export function PointsForm({ onSubmit }: PointsFormProps) {
   const [rollNo, setRollNo] = useState("");
-  const [name, setName] = useState("");
   const [points, setPoints] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,9 +19,8 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
 
     setIsSubmitting(true);
     try {
-      await onSubmit(rollNo.trim().toUpperCase(), name.trim(), parseInt(points, 10));
+      await onSubmit(rollNo.trim().toUpperCase(), parseInt(points, 10));
       setRollNo("");
-      setName("");
       setPoints("");
     } finally {
       setIsSubmitting(false);
@@ -37,14 +35,13 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="rollNo" className="font-body text-xs sm:text-sm text-muted-foreground">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="rollNo" className="font-body text-sm text-muted-foreground">
               Roll Number *
             </Label>
             <Input
               id="rollNo"
-              placeholder="e.g., 2024CS001"
               value={rollNo}
               onChange={(e) => setRollNo(e.target.value)}
               required
@@ -52,33 +49,19 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
             />
           </div>
 
-          <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="name" className="font-body text-xs sm:text-sm text-muted-foreground">
-              Name (Optional)
-            </Label>
-            <Input
-              id="name"
-              placeholder="Student name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="text-base"
-            />
-          </div>
-
-          <div className="space-y-1.5 sm:space-y-2 sm:col-span-2 lg:col-span-1">
-            <Label htmlFor="points" className="font-body text-xs sm:text-sm text-muted-foreground">
+          <div className="space-y-2">
+            <Label htmlFor="points" className="font-body text-sm text-muted-foreground">
               Points *
             </Label>
             <Input
               id="points"
               type="number"
               inputMode="numeric"
-              placeholder="e.g., 10"
               value={points}
               onChange={(e) => setPoints(e.target.value)}
               required
-              min={-1000}
-              max={1000}
+              min={0}
+              max={10}
               className="text-base"
             />
           </div>
