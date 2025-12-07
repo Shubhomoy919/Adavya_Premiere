@@ -40,7 +40,32 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
-      }
+      },
+      admins: {
+        Row: {
+          id: string
+          rollno: string
+          password: string
+          role: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          rollno: string
+          password: string
+          role: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          rollno?: string
+          password?: string
+          role?: string
+          created_at?: string
+        }
+        Relationships: []
+      },
+
     }
     Views: {
       [_ in never]: never

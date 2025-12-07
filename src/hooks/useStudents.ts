@@ -129,7 +129,7 @@ export function useStudents() {
 
     // Set up realtime subscription
     const channel = supabase
-      .channel("students-changes")
+      .channel("students-realtime")
       .on(
         "postgres_changes",
         {
