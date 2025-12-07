@@ -1,12 +1,32 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from "@/components/Header";
+import { PointsForm } from "@/components/PointsForm";
+import { PointsTable } from "@/components/PointsTable";
+import { useStudents } from "@/hooks/useStudents";
 
 const Index = () => {
+  const { students, loading, addStudent, updateStudent, deleteStudent } = useStudents();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8 space-y-8">
+        <PointsForm onSubmit={addStudent} />
+        <PointsTable
+          students={students}
+          loading={loading}
+          onUpdate={updateStudent}
+          onDelete={deleteStudent}
+        />
+      </main>
+
+      <footer className="border-t border-border py-6 mt-12">
+        <div className="container mx-auto px-4 text-center">
+          <p className="font-body text-sm text-muted-foreground">
+            © 2024 Adavya Retroverse • Freshers Event
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };
