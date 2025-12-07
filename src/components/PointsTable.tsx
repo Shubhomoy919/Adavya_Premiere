@@ -54,7 +54,7 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
 
   if (loading) {
     return (
-      <div className="card-vintage rounded-sm border-2 border-border p-12 animate-fade-in">
+      <div className="card-vintage rounded-sm border-2 border-border p-8 sm:p-12 animate-fade-in">
         <div className="flex flex-col items-center justify-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-gold" />
           <p className="font-body text-muted-foreground">Loading students...</p>
@@ -66,88 +66,136 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
   return (
     <>
       <div className="card-vintage rounded-sm border-2 border-border overflow-hidden animate-slide-up">
-        <div className="flex items-center gap-2 p-6 border-b border-border">
-          <div className="w-1 h-6 bg-burgundy rounded-full" />
-          <h2 className="font-display text-xl font-semibold text-foreground">
+        <div className="flex items-center gap-2 p-4 sm:p-6 border-b border-border">
+          <div className="w-1 h-5 sm:h-6 bg-burgundy rounded-full" />
+          <h2 className="font-display text-lg sm:text-xl font-semibold text-foreground">
             Leaderboard
           </h2>
-          <span className="ml-auto font-body text-sm text-muted-foreground">
+          <span className="ml-auto font-body text-xs sm:text-sm text-muted-foreground">
             {students.length} {students.length === 1 ? "student" : "students"}
           </span>
         </div>
 
         {students.length === 0 ? (
-          <div className="p-12 text-center">
-            <Trophy className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
-            <p className="font-body text-muted-foreground text-lg">
+          <div className="p-8 sm:p-12 text-center">
+            <Trophy className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/30 mx-auto mb-4" />
+            <p className="font-body text-muted-foreground text-base sm:text-lg">
               No students yet. Add some points to get started!
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-border hover:bg-transparent">
-                  <TableHead className="w-16 font-display text-xs uppercase tracking-wider text-muted-foreground">
-                    Rank
-                  </TableHead>
-                  <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
-                    Roll No
-                  </TableHead>
-                  <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
-                    Name
-                  </TableHead>
-                  <TableHead className="text-right font-display text-xs uppercase tracking-wider text-muted-foreground">
-                    Points
-                  </TableHead>
-                  <TableHead className="w-24 text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
-                    Actions
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {students.map((student, index) => (
-                  <TableRow
-                    key={student.id}
-                    className="border-border hover:bg-secondary/50 transition-colors"
-                  >
-                    <TableCell className="text-center">{getRankIcon(index)}</TableCell>
-                    <TableCell className="font-body font-semibold text-foreground">
+          <>
+            {/* Mobile Card View */}
+            <div className="block sm:hidden divide-y divide-border">
+              {students.map((student, index) => (
+                <div
+                  key={student.id}
+                  className="p-4 flex items-center gap-3 hover:bg-secondary/30 transition-colors"
+                >
+                  <div className="flex-shrink-0 w-8 text-center">
+                    {getRankIcon(index)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-body font-semibold text-foreground truncate">
                       {student.roll_no}
-                    </TableCell>
-                    <TableCell className="font-body text-muted-foreground">
-                      {student.name || "—"}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <span className="font-display font-bold text-lg text-gold">
-                        {student.points}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex justify-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setEditingStudent(student)}
-                          className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => setDeletingStudent(student)}
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
+                    </p>
+                    <p className="font-body text-sm text-muted-foreground truncate">
+                      {student.name || "No name"}
+                    </p>
+                  </div>
+                  <div className="flex-shrink-0 text-right">
+                    <span className="font-display font-bold text-xl text-gold">
+                      {student.points}
+                    </span>
+                  </div>
+                  <div className="flex-shrink-0 flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setEditingStudent(student)}
+                      className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setDeletingStudent(student)}
+                      className="h-9 w-9 text-muted-foreground hover:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden sm:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-border hover:bg-transparent">
+                    <TableHead className="w-16 font-display text-xs uppercase tracking-wider text-muted-foreground">
+                      Rank
+                    </TableHead>
+                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
+                      Roll No
+                    </TableHead>
+                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
+                      Name
+                    </TableHead>
+                    <TableHead className="text-right font-display text-xs uppercase tracking-wider text-muted-foreground">
+                      Points
+                    </TableHead>
+                    <TableHead className="w-24 text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
+                      Actions
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                </TableHeader>
+                <TableBody>
+                  {students.map((student, index) => (
+                    <TableRow
+                      key={student.id}
+                      className="border-border hover:bg-secondary/50 transition-colors"
+                    >
+                      <TableCell className="text-center">{getRankIcon(index)}</TableCell>
+                      <TableCell className="font-body font-semibold text-foreground">
+                        {student.roll_no}
+                      </TableCell>
+                      <TableCell className="font-body text-muted-foreground">
+                        {student.name || "—"}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <span className="font-display font-bold text-lg text-gold">
+                          {student.points}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex justify-center gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setEditingStudent(student)}
+                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setDeletingStudent(student)}
+                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </div>
 
