@@ -51,14 +51,14 @@ export function EditStudentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-2 border-border shadow-elegant">
+      <DialogContent className="bg-card border-2 border-border shadow-elegant mx-4 sm:mx-auto max-w-[calc(100vw-2rem)] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-display text-xl">Edit Student</DialogTitle>
+          <DialogTitle className="font-display text-lg sm:text-xl">Edit Student</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label htmlFor="edit-rollNo" className="font-body text-sm text-muted-foreground">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="edit-rollNo" className="font-body text-xs sm:text-sm text-muted-foreground">
               Roll Number
             </Label>
             <Input
@@ -66,39 +66,43 @@ export function EditStudentDialog({
               value={rollNo}
               onChange={(e) => setRollNo(e.target.value)}
               required
-              className="uppercase"
+              className="uppercase text-base"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="edit-name" className="font-body text-sm text-muted-foreground">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="edit-name" className="font-body text-xs sm:text-sm text-muted-foreground">
               Name (Optional)
             </Label>
             <Input
               id="edit-name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="text-base"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="edit-points" className="font-body text-sm text-muted-foreground">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="edit-points" className="font-body text-xs sm:text-sm text-muted-foreground">
               Total Points
             </Label>
             <Input
               id="edit-points"
               type="number"
+              inputMode="numeric"
               value={points}
               onChange={(e) => setPoints(e.target.value)}
               required
+              className="text-base"
             />
           </div>
 
-          <div className="flex gap-3 justify-end pt-4">
+          <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-end pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
@@ -106,6 +110,7 @@ export function EditStudentDialog({
               type="submit"
               variant="vintage"
               disabled={isSubmitting || !rollNo.trim()}
+              className="w-full sm:w-auto"
             >
               {isSubmitting ? (
                 <>

@@ -7,10 +7,10 @@ const Index = () => {
   const { students, loading, addStudent, updateStudent, deleteStudent } = useStudents();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <Header />
       
-      <main className="container mx-auto px-4 py-8 space-y-8">
+      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8 flex-1">
         <PointsForm onSubmit={addStudent} />
         <PointsTable
           students={students}
@@ -20,9 +20,9 @@ const Index = () => {
         />
       </main>
 
-      <footer className="border-t border-border py-6 mt-12">
-        <div className="container mx-auto px-4 text-center">
-          <p className="font-body text-sm text-muted-foreground">
+      <footer className="border-t border-border py-4 sm:py-6 mt-auto">
+        <div className="container mx-auto px-3 sm:px-4 text-center">
+          <p className="font-body text-xs sm:text-sm text-muted-foreground">
             © 2024 Adavya Retroverse • Freshers Event
           </p>
         </div>

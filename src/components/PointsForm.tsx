@@ -30,16 +30,16 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
   };
 
   return (
-    <div className="card-vintage rounded-sm border-2 border-border p-6 animate-fade-in">
-      <div className="flex items-center gap-2 mb-6">
-        <div className="w-1 h-6 bg-gold rounded-full" />
-        <h2 className="font-display text-xl font-semibold text-foreground">Add Points</h2>
+    <div className="card-vintage rounded-sm border-2 border-border p-4 sm:p-6 animate-fade-in">
+      <div className="flex items-center gap-2 mb-4 sm:mb-6">
+        <div className="w-1 h-5 sm:h-6 bg-gold rounded-full" />
+        <h2 className="font-display text-lg sm:text-xl font-semibold text-foreground">Add Points</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="rollNo" className="font-body text-sm text-muted-foreground">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="rollNo" className="font-body text-xs sm:text-sm text-muted-foreground">
               Roll Number *
             </Label>
             <Input
@@ -48,12 +48,12 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
               value={rollNo}
               onChange={(e) => setRollNo(e.target.value)}
               required
-              className="uppercase"
+              className="uppercase text-base"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="name" className="font-body text-sm text-muted-foreground">
+          <div className="space-y-1.5 sm:space-y-2">
+            <Label htmlFor="name" className="font-body text-xs sm:text-sm text-muted-foreground">
               Name (Optional)
             </Label>
             <Input
@@ -61,22 +61,25 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
               placeholder="Student name"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              className="text-base"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="points" className="font-body text-sm text-muted-foreground">
+          <div className="space-y-1.5 sm:space-y-2 sm:col-span-2 lg:col-span-1">
+            <Label htmlFor="points" className="font-body text-xs sm:text-sm text-muted-foreground">
               Points *
             </Label>
             <Input
               id="points"
               type="number"
+              inputMode="numeric"
               placeholder="e.g., 10"
               value={points}
               onChange={(e) => setPoints(e.target.value)}
               required
               min={-1000}
               max={1000}
+              className="text-base"
             />
           </div>
         </div>
@@ -85,7 +88,7 @@ export function PointsForm({ onSubmit }: PointsFormProps) {
           type="submit"
           variant="vintage"
           size="lg"
-          className="w-full md:w-auto"
+          className="w-full"
           disabled={isSubmitting || !rollNo.trim() || !points}
         >
           {isSubmitting ? (
