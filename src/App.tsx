@@ -8,6 +8,7 @@ import Index from "./pages/Index";           // Points Page
 import Login from "./pages/Login";           // Admin Login Page
 import ManageAdmins from "./pages/ManageAdmins"; // Main Admin Page
 import NotFound from "./pages/NotFound";
+import LeaderboardPage from "./pages/LeaderBoard";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,9 @@ const App = () => (
         <Routes>
           {/* Login */}
           <Route path="/login" element={<Login />} />
+
+          {/* Public Leaderboard */}
+          <Route path="/leaderboard" element={<LeaderboardPage />} />
 
           {/* Points (default admin home) */}
           <Route path="/points" element={<Index />} />

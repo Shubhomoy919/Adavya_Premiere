@@ -76,6 +76,14 @@ export default function Login() {
             Login
           </Button>
         </CardContent>
+        <Button
+          variant="outline"
+          className="w-full mt-2"
+          onClick={() => (window.location.href = "/leaderboard")}
+        >
+          View Leaderboard
+        </Button>
+
       </Card>
     </div>
   );
