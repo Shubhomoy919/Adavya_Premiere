@@ -6,6 +6,7 @@ export interface Student {
   id: string;
   roll_no: string;
   points: number;
+  game_stats: Record<string, number>;
   created_at: string;
   updated_at: string;
 }
@@ -23,7 +24,14 @@ export function useStudents() {
         .order("points", { ascending: false });
 
       if (error) throw error;
-      setStudents(data || []);
+
+      // Parse game_stats from JSON if necessary, though Supabase client usually handles it
+      const parsedData = (data || []).map(student => ({
+        ...student,
+        game_stats: (student.game_stats as Record<string, number>) || {}
+      }));
+
+      setStudents(parsedData);
     } catch (error: any) {
       toast({
         title: "Error fetching students",
@@ -35,39 +43,74 @@ export function useStudents() {
     }
   };
 
-  const addStudent = async (rollNo: string, points: number) => {
+  const getStudentByRollNo = async (rollNo: string) => {
     try {
-      // Check if student exists
-      const { data: existing } = await supabase
+      const { data, error } = await supabase
         .from("students")
-        .select("id, points")
+        .select("*")
         .eq("roll_no", rollNo)
         .maybeSingle();
 
+      if (error) throw error;
+
+      if (data) {
+        return {
+          ...data,
+          game_stats: (data.game_stats as Record<string, number>) || {}
+        } as Student;
+      }
+      return null;
+    } catch (error: any) {
+      console.error("Error fetching student:", error);
+      return null; // Return null on error to handle gracefully in UI
+    }
+  };
+
+  const addStudent = async (rollNo: string, gameKey: string, score: number) => {
+    try {
+      const existing = await getStudentByRollNo(rollNo);
+
       if (existing) {
-        // Update existing student's points
+        const currentStats = existing.game_stats || {};
+        const newGameCount = (currentStats[gameKey] || 0) + 1;
+
+        const updatedStats = {
+          ...currentStats,
+          [gameKey]: newGameCount
+        };
+
         const { error } = await supabase
           .from("students")
-          .update({ 
-            points: existing.points + points
+          .update({
+            points: existing.points + score,
+            game_stats: updatedStats
           })
           .eq("id", existing.id);
 
         if (error) throw error;
+
         toast({
-          title: "Points Updated",
-          description: `Added ${points} points to ${rollNo}`,
+          title: "Score Updated",
+          description: `Added ${score} points to ${rollNo}. Play count: ${newGameCount}`,
         });
       } else {
-        // Create new student
+        const initialStats = {
+          [gameKey]: 1
+        };
+
         const { error } = await supabase
           .from("students")
-          .insert({ roll_no: rollNo, points });
+          .insert({
+            roll_no: rollNo,
+            points: score,
+            game_stats: initialStats
+          });
 
         if (error) throw error;
+
         toast({
           title: "Student Added",
-          description: `${rollNo} added with ${points} points`,
+          description: `${rollNo} added with score ${score}. Play count: 1`,
         });
       }
     } catch (error: any) {
@@ -155,5 +198,6 @@ export function useStudents() {
     updateStudent,
     deleteStudent,
     refetch: fetchStudents,
+    getStudentByRollNo,
   };
 }

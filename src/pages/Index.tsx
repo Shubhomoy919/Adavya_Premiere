@@ -10,7 +10,7 @@ const Index = () => {
   requireAuth();
 
   const admin = getAdmin(); // get logged-in admin
-  const { students, loading, addStudent, updateStudent, deleteStudent } = useStudents();
+  const { students, loading, addStudent, updateStudent, deleteStudent, getStudentByRollNo } = useStudents();
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden max-w-full">
@@ -30,7 +30,10 @@ const Index = () => {
           </div>
         )}
 
-        <PointsForm onSubmit={addStudent} />
+        <PointsForm
+          onSubmit={addStudent}
+          onCheckStudent={getStudentByRollNo}
+        />
 
         <PointsTable
           students={students}
