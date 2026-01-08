@@ -70,7 +70,7 @@ export function PointsForm({ onSubmit, onCheckStudent }: PointsFormProps) {
     try {
       await onSubmit(rollNo.trim().toUpperCase(), selectedGame, parseInt(score, 10));
       // Reset form on success
-      setRollNo("");
+      setRollNo("2025B");
       setScore("");
       setSelectedGame(""); // Optional: keep game selected if they want to enter multiple? For now reset.
       setStep(1);
