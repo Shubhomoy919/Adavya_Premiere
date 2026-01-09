@@ -28,6 +28,7 @@ const GAMES = [
   { key: "dumbell_hold", label: "Dumbell Hold" },
   { key: "blank_challenge", label: "Blank Challenge" }, // Added based on user audio listing
   { key: "floor_passing", label: "Floor Passing" }, // Added based on user audio listing - "floor passing" or "flour passing" duplicate? User audio said "floor passing" and "blank challenge"? Wait. User audio said "Blank Challenge, Flour Passing, Lucky Number, Cup Pyramid, Carrom, Bindi Game, Dumbell Hold". "Flour Passing" is already there. I'll stick to the list I saw in the audio + migration. The migration has 7 games.
+  { key: "bottle_flip", label:"Bottle Flip"}
   // Wait, let's stick to the migration keys.
   // The migration listed: plank_challenge, flour_passing, lucky_number, cup_pyramid, carrom, bindi_game, dumbell_hold.
   // User audio mentioned "Blank Challenge". Maybe that's "Plank Challenge"? "Plank" sounds like "Blank". I will assume "Plank Challenge" matches "plank_challenge".
@@ -127,6 +128,8 @@ export function PointsForm({ onSubmit, onCheckStudent }: PointsFormProps) {
                   <SelectItem value="carrom">Carrom</SelectItem>
                   <SelectItem value="bindi_game">Bindi Game</SelectItem>
                   <SelectItem value="dumbell_hold">Dumbell Lateral Hold</SelectItem>
+                  <SelectItem value="bottle_flip">Bottle Flip</SelectItem>
+                  
                 </SelectContent>
               </Select>
             </div>
