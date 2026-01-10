@@ -158,14 +158,14 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                       </TableCell>
                       <TableCell>
                         <div className="flex justify-center gap-1">
-                          <Button
+                          {/* <Button
                             variant="ghost"
                             size="icon"
                             onClick={() => setEditingStudent(student)}
                             className="h-8 w-8 text-muted-foreground hover:text-foreground"
                           >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                            {<Pencil className="h-4 w-4" />}
+                          </Button> */}
                           <Button
                             variant="ghost"
                             size="icon"
@@ -185,12 +185,12 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
         )}
       </div>
 
-      <EditStudentDialog
+      {/* <EditStudentDialog
         student={editingStudent}
         open={!!editingStudent}
         onOpenChange={(open) => !open && setEditingStudent(null)}
         onSave={onUpdate}
-      />
+      /> */}
 
       <AlertDialog open={!!deletingStudent} onOpenChange={(open) => !open && setDeletingStudent(null)}>
         <AlertDialogContent className="bg-card border-2 border-border">
