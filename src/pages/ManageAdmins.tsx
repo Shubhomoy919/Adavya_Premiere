@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAdmins } from "@/hooks/useAdmins";
-import { requireRole } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,46 +21,26 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import LogoutButton from "@/components/LogoutButton";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, Info } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ManageAdmins() {
-  requireRole("main"); // Only main admin allowed
-
-  const { admins, loading, addAdmin, deleteAdmin } = useAdmins();
+  const { role, session, loading: authLoading } = useAuth();
+  const { admins, loading, deleteAdmin } = useAdmins();
   const { toast } = useToast();
 
-  const [rollno, setRollno] = useState("");
   const [selectedAdmin, setSelectedAdmin] = useState<any | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleAddAdmin = async () => {
-    if (!rollno.trim()) {
-      toast({
-        title: "Missing roll number",
-        description: "Enter roll number to add admin.",
-        variant: "destructive",
-      });
-      return;
+  useEffect(() => {
+    if (!authLoading) {
+      if (!session) {
+        window.location.href = "/login";
+      } else if (role !== "main") {
+        window.location.href = "/points";
+      }
     }
-
-    const ok = await addAdmin(rollno);
-    if (!ok) {
-      toast({
-        title: "Error",
-        description: "Roll number already exists or failed to add.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Success!",
-      description: `${rollno} added as admin.`,
-    });
-
-    setRollno("");
-  };
+  }, [session, role, authLoading]);
 
   const handleDelete = async () => {
     if (!selectedAdmin) return;
@@ -73,20 +52,28 @@ export default function ManageAdmins() {
     setSelectedAdmin(null);
 
     if (!ok) {
-      toast({ title: "Error removing admin", variant: "destructive" });
+      toast({ title: "Error removing admin role", variant: "destructive" });
+    } else {
+      toast({ title: "Admin role removed successfully" });
     }
   };
 
+  if (authLoading || role !== "main") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f3e4c6]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#3b2f2f]" />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#f3e4c6] p-4 sm:p-6">
-
       {/* Logout Button */}
       <div className="flex justify-end mb-4">
         <LogoutButton />
       </div>
 
       <div className="card-vintage rounded-sm border-2 border-border animate-slide-up overflow-hidden">
-
         {/* Header */}
         <div className="flex items-center gap-2 p-4 sm:p-6 border-b border-border">
           <div className="w-1 h-5 sm:h-6 bg-burgundy rounded-full" />
@@ -98,20 +85,12 @@ export default function ManageAdmins() {
           </span>
         </div>
 
-        {/* Add Admin */}
-        <div className="p-4 sm:p-6 border-b border-border flex gap-2">
-          <Input
-            placeholder="Enter Roll Number"
-            value={rollno}
-            onChange={(e) => setRollno(e.target.value)}
-            className="bg-[#fffaf3] border-[#d1c0a3]"
-          />
-          <Button
-            className="bg-[#3b2f2f] text-white hover:bg-[#2f2424]"
-            onClick={handleAddAdmin}
-          >
-            Add
-          </Button>
+        {/* Add Admin Instructions */}
+        <div className="p-4 sm:p-6 border-b border-border bg-[#fffaf3] flex items-start gap-3">
+          <Info className="h-5 w-5 text-[#3b2f2f] mt-0.5 shrink-0" />
+          <p className="text-sm text-[#3b2f2f]">
+            <strong>Note:</strong> To create a new admin, please use the Supabase Auth Dashboard to create their account, and then insert a row into the <code>admin_roles</code> table with their UUID.
+          </p>
         </div>
 
         {/* Loading */}
@@ -126,7 +105,7 @@ export default function ManageAdmins() {
         {!loading && admins.length === 0 && (
           <div className="p-8 sm:p-12 text-center">
             <p className="font-body text-muted-foreground text-base sm:text-lg">
-              No admins yet. Add one to get started!
+              No admins found in the admin_roles table.
             </p>
           </div>
         )}
@@ -143,7 +122,7 @@ export default function ManageAdmins() {
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-body font-semibold text-foreground truncate">
-                      {adm.rollno}
+                      {adm.roll_no || adm.id.substring(0, 8) + '...'}
                     </p>
                     <p className="text-xs text-muted-foreground capitalize">
                       {adm.role}
@@ -171,7 +150,7 @@ export default function ManageAdmins() {
                 <TableHeader>
                   <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
-                      Roll No
+                      Identifier (Roll No / ID)
                     </TableHead>
                     <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground text-center">
                       Role
@@ -189,7 +168,7 @@ export default function ManageAdmins() {
                       className="border-border hover:bg-secondary/50 transition-colors"
                     >
                       <TableCell className="font-body font-semibold text-foreground">
-                        {adm.rollno}
+                        {adm.roll_no || adm.id}
                       </TableCell>
 
                       <TableCell className="text-center capitalize">
@@ -230,10 +209,10 @@ export default function ManageAdmins() {
       >
         <AlertDialogContent className="bg-card border-2 border-border">
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display">Remove Admin?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display">Remove Admin Role?</AlertDialogTitle>
             <AlertDialogDescription className="font-body">
-              Are you sure you want to remove{" "}
-              <strong>{selectedAdmin?.rollno}</strong> as an admin?
+              Are you sure you want to remove the admin role for{" "}
+              <strong>{selectedAdmin?.roll_no || selectedAdmin?.id}</strong>?
             </AlertDialogDescription>
           </AlertDialogHeader>
 

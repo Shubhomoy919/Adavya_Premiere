@@ -9,7 +9,7 @@ export function useAdmins() {
     setLoading(true);
 
     const { data, error } = await supabase
-      .from("admins")
+      .from("admin_roles")
       .select("*");
 
     if (error) {
@@ -20,23 +20,8 @@ export function useAdmins() {
     setLoading(false);
   };
 
-  const addAdmin = async (rollno: string) => {
-    const { error } = await supabase.from("admins").insert({
-      rollno,
-      password: "retroverse123",
-      role: "admin",
-    });
-
-    if (error) {
-      console.error(error);
-      return false;
-    }
-
-    return true;
-  };
-
   const deleteAdmin = async (id: string) => {
-    const { error } = await supabase.from("admins").delete().eq("id", id);
+    const { error } = await supabase.from("admin_roles").delete().eq("id", id);
     if (error) {
       console.error(error);
       return false;
@@ -52,7 +37,7 @@ export function useAdmins() {
       .channel("admins-realtime")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "admins" },
+        { event: "*", schema: "public", table: "admin_roles" },
         () => fetchAdmins()
       )
       .subscribe();
@@ -65,7 +50,6 @@ export function useAdmins() {
   return {
     admins,
     loading,
-    addAdmin,
     deleteAdmin,
   };
 }

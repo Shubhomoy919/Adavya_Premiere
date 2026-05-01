@@ -1,7 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { logout } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 
 export default function LogoutButton() {
+  const { logout } = useAuth();
+  
   return (
     <Button
       onClick={logout}

@@ -2,15 +2,28 @@ import { Header } from "@/components/Header";
 import { PointsForm } from "@/components/PointsForm";
 import { PointsTable } from "@/components/PointsTable";
 import { useStudents } from "@/hooks/useStudents";
-import { requireAuth, getAdmin } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
-  // Protect this page (both admin + main admin allowed)
-  requireAuth();
-
-  const admin = getAdmin(); // get logged-in admin
+  const { session, role, loading: authLoading } = useAuth();
   const { students, loading, addStudent, updateStudent, deleteStudent, getStudentByRollNo } = useStudents();
+
+  useEffect(() => {
+    if (!authLoading && !session) {
+      window.location.href = "/login";
+    }
+  }, [session, authLoading]);
+
+  if (authLoading || !session) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="h-8 w-8 animate-spin text-gold" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col overflow-x-hidden max-w-full">
@@ -19,7 +32,7 @@ const Index = () => {
       <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8 flex-1 w-full max-w-full overflow-x-hidden">
 
         {/* Only show this if user is MAIN ADMIN */}
-        {admin?.role === "main" && (
+        {role === "main" && (
           <div className="flex justify-end mb-4">
             <Button
               onClick={() => (window.location.href = "/manage-admins")}

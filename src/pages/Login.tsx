@@ -1,56 +1,63 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { getAdmin } from "@/lib/auth";
+import { useAuth } from "@/lib/auth";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
 
 export default function Login() {
   const { toast } = useToast();
-  const [rollno, setRollno] = useState("");
+  const { role, session, loading: authLoading } = useAuth();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // 🟢 AUTO-REDIRECT IF ALREADY LOGGED IN
   useEffect(() => {
-    const admin = getAdmin();
-    if (admin) {
-      window.location.href =
-        admin.role === "main" ? "/manage-admins" : "/points";
+    if (!authLoading && session && role) {
+      window.location.href = role === "main" ? "/manage-admins" : "/points";
     }
-  }, []);
+  }, [session, role, authLoading]);
 
   const handleLogin = async () => {
-    if (!rollno || !password) {
+    if (!email || !password) {
       toast({
         title: "Missing fields",
-        description: "Enter both roll number and password.",
+        description: "Enter both email and password.",
         variant: "destructive",
       });
       return;
     }
 
-    const { data } = await supabase
-      .from("admins")
-      .select("*")
-      .eq("rollno", rollno)
-      .single();
+    setLoading(true);
 
-    if (!data || password !== data.password) {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
       toast({
         title: "Invalid credentials",
-        description: "Roll number or password incorrect.",
+        description: error.message,
         variant: "destructive",
       });
+      setLoading(false);
       return;
     }
 
-    // 🟢 STORE SESSION FOREVER UNTIL LOGOUT
-    localStorage.setItem("admin", JSON.stringify(data));
-
-    window.location.href =
-      data.role === "main" ? "/manage-admins" : "/points";
+    // Role fetching and redirection are handled by the AuthProvider and the useEffect above.
   };
+
+  if (authLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#f3e4c6]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#3b2f2f]" />
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex items-center justify-center bg-[#f3e4c6]">
@@ -62,9 +69,10 @@ export default function Login() {
         </CardHeader>
         <CardContent className="space-y-4">
           <Input
-            placeholder="Roll Number"
-            value={rollno}
-            onChange={(e) => setRollno(e.target.value)}
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <Input
             type="password"
@@ -72,8 +80,9 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button className="w-full" onClick={handleLogin}>
-            Login
+          <Button className="w-full bg-[#3b2f2f] text-white hover:bg-[#2f2424]" onClick={handleLogin} disabled={loading}>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+            {loading ? "Logging in..." : "Login"}
           </Button>
         </CardContent>
         <Button
@@ -83,7 +92,6 @@ export default function Login() {
         >
           View Leaderboard
         </Button>
-
       </Card>
     </div>
   );
