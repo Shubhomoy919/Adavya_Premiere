@@ -27,6 +27,11 @@ function rankClass(index: number) {
   return rankStyles[index] ?? "border-gold/15 bg-onyx/40 text-muted-foreground";
 }
 
+/* Negative totals render in destructive red - see PointsTable */
+function pointsClass(points: number) {
+  return points < 0 ? "text-destructive" : "text-gold";
+}
+
 export default function LeaderboardPage() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
@@ -131,7 +136,7 @@ export default function LeaderboardPage() {
                     <TableCell className="text-center font-body font-semibold text-foreground">
                       {s.roll_no}
                     </TableCell>
-                    <TableCell className="text-center font-display font-bold text-lg text-gold">
+                    <TableCell className={`text-center font-display font-bold text-lg ${pointsClass(s.points)}`}>
                       {s.points}
                     </TableCell>
                   </TableRow>

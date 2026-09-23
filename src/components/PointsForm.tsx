@@ -93,9 +93,14 @@ export function PointsForm({ onSubmit, onCheckStudent }: PointsFormProps) {
     e.preventDefault();
     if (!rollNo.trim() || !selectedGame || !score) return;
 
+    // Negative scores are allowed (penalties), so "-" on its own is now a
+    // reachable intermediate state — parseInt would yield NaN.
+    const parsedScore = parseInt(score, 10);
+    if (Number.isNaN(parsedScore)) return;
+
     setIsSubmitting(true);
     try {
-      await onSubmit(rollNo.trim().toUpperCase(), selectedGame, parseInt(score, 10));
+      await onSubmit(rollNo.trim().toUpperCase(), selectedGame, parsedScore);
       // Reset form on success
       setRollNo("2026B");
       setScore("");
@@ -221,12 +226,17 @@ export function PointsForm({ onSubmit, onCheckStudent }: PointsFormProps) {
               value={score}
               onChange={(e) => setScore(e.target.value)}
               required
-              min={0}
+              min={-50}
               max={50}
               autoFocus
-              className="text-lg font-mono tracking-widest text-gold-light"
+              className={`text-lg font-mono tracking-widest ${
+                Number(score) < 0 ? "text-destructive" : "text-gold-light"
+              }`}
               placeholder="Enter score"
             />
+            <p className="font-body text-xs text-muted-foreground">
+              Use a negative value for a penalty, e.g. <span className="font-mono text-destructive">-5</span>.
+            </p>
           </div>
 
           <div className="flex gap-3">

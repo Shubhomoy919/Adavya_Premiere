@@ -41,6 +41,12 @@ function rankClass(index: number) {
   return rankStyles[index] ?? "border-gold/15 bg-onyx/40 text-muted-foreground";
 }
 
+/* A negative total means penalties outweigh points earned - show it in the
+   destructive red so it reads as a deduction, not a data-entry slip. */
+function pointsClass(points: number) {
+  return points < 0 ? "text-destructive" : "text-gold";
+}
+
 export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTableProps) {
   // Removing a player is admin-only, matching the students_delete_admin RLS
   // policy — volunteers never see a button the database would refuse.
@@ -116,7 +122,7 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                     </p>
                   </div>
                   <div className="flex-shrink-0 text-right">
-                    <span className="font-display font-bold text-xl text-gold">
+                    <span className={`font-display font-bold text-xl ${pointsClass(student.points)}`}>
                       {student.points}
                     </span>
                   </div>
@@ -179,7 +185,7 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                         {student.roll_no}
                       </TableCell>
                       <TableCell className="text-center">
-                        <span className="font-display font-bold text-lg text-gold">
+                        <span className={`font-display font-bold text-lg ${pointsClass(student.points)}`}>
                           {student.points}
                         </span>
                       </TableCell>
