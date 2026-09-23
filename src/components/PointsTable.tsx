@@ -18,8 +18,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Pencil, Trash2, Loader2 } from "lucide-react";
+import { Pencil, Trash2, Loader2, Film } from "lucide-react";
 import type { Student } from "@/hooks/useStudents";
+import { useAuth } from "@/lib/auth";
 import { EditStudentDialog } from "./EditStudentDialog";
 
 interface PointsTableProps {
@@ -29,8 +30,23 @@ interface PointsTableProps {
   onDelete: (id: string) => Promise<void>;
 }
 
+/* Gold / silver / bronze billing for the top three names on the poster */
+const rankStyles = [
+  "border-gold/70 bg-gold/15 text-gold-light",
+  "border-silver/50 bg-silver/10 text-silver",
+  "border-carpet-bright/60 bg-carpet/20 text-carpet-bright",
+];
+
+function rankClass(index: number) {
+  return rankStyles[index] ?? "border-gold/15 bg-onyx/40 text-muted-foreground";
+}
 
 export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTableProps) {
+  // Removing a player is admin-only, matching the students_delete_admin RLS
+  // policy — volunteers never see a button the database would refuse.
+  const { role } = useAuth();
+  const canDelete = role === "main" || role === "admin";
+
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [deletingStudent, setDeletingStudent] = useState<Student | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -48,10 +64,12 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
 
   if (loading) {
     return (
-      <div className="card-vintage rounded-sm border-2 border-border p-8 sm:p-12 animate-fade-in">
+      <div className="card-premiere rounded-md p-8 sm:p-12 animate-fade-in">
         <div className="flex flex-col items-center justify-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-gold" />
-          <p className="font-body text-muted-foreground">Loading students...</p>
+          <div className="reel-spinner" />
+          <p className="font-display text-sm uppercase tracking-[0.2em] text-muted-foreground">
+            Loading students...
+          </p>
         </div>
       </div>
     );
@@ -59,10 +77,10 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
 
   return (
     <>
-      <div className="card-vintage rounded-sm border-2 border-border overflow-hidden animate-slide-up">
-        <div className="flex items-center gap-2 p-4 sm:p-6 border-b border-border">
-          <div className="w-1 h-5 sm:h-6 bg-burgundy rounded-full" />
-          <h2 className="font-display text-lg sm:text-xl font-semibold text-foreground">
+      <div className="card-premiere rounded-md overflow-hidden animate-slide-up">
+        <div className="flex items-center gap-2 sm:gap-3 p-4 sm:p-6 border-b border-gold/20">
+          <Film className="h-5 w-5 shrink-0 text-gold" />
+          <h2 className="font-display text-lg sm:text-xl font-semibold uppercase tracking-[0.12em] text-ivory">
             Leaderboard
           </h2>
           <span className="ml-auto font-body text-xs sm:text-sm text-muted-foreground">
@@ -79,14 +97,18 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
         ) : (
           <>
             {/* Mobile Card View */}
-            <div className="block sm:hidden divide-y divide-border">
+            <div className="block sm:hidden divide-y divide-gold/10">
               {students.map((student, index) => (
                 <div
                   key={student.id}
-                  className="p-4 flex items-center gap-3 hover:bg-secondary/30 transition-colors"
+                  className="p-4 flex items-center gap-3 hover:bg-carpet/15 transition-colors"
                 >
-                  <div className="flex-shrink-0 w-8 text-center">
-                    <span className="text-muted-foreground font-body">{index + 1}</span>
+                  <div className="flex-shrink-0">
+                    <span
+                      className={`flex h-8 w-8 items-center justify-center rounded-full border font-display text-xs font-bold ${rankClass(index)}`}
+                    >
+                      {index + 1}
+                    </span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-body font-semibold text-foreground truncate">
@@ -98,24 +120,26 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                       {student.points}
                     </span>
                   </div>
-                  <div className="flex-shrink-0 flex gap-1">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setEditingStudent(student)}
-                      className="h-9 w-9 text-muted-foreground hover:text-foreground"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeletingStudent(student)}
-                      className="h-9 w-9 text-muted-foreground hover:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+                  {canDelete && (
+                    <div className="flex-shrink-0 flex gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setEditingStudent(student)}
+                        className="h-9 w-9"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setDeletingStudent(student)}
+                        className="h-9 w-9 hover:bg-destructive/15 hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -124,29 +148,32 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
             <div className="hidden sm:block overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-border hover:bg-transparent">
-                    <TableHead className="w-16 font-display text-xs uppercase tracking-wider text-muted-foreground">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead className="w-16 text-center">
                       Rank
                     </TableHead>
-                    <TableHead className="text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
+                    <TableHead className="text-center">
                       Roll No
                     </TableHead>
-                    <TableHead className="text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
+                    <TableHead className="text-center">
                       Points
                     </TableHead>
-                    <TableHead className="w-24 text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
-                      Actions
-                    </TableHead>
+                    {canDelete && (
+                      <TableHead className="w-24 text-center">
+                        Actions
+                      </TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {students.map((student, index) => (
-                    <TableRow
-                      key={student.id}
-                      className="border-border hover:bg-secondary/50 transition-colors"
-                    >
+                    <TableRow key={student.id}>
                       <TableCell className="text-center">
-                        <span className="text-muted-foreground font-body">{index + 1}</span>
+                        <span
+                          className={`inline-flex h-8 w-8 items-center justify-center rounded-full border font-display text-xs font-bold ${rankClass(index)}`}
+                        >
+                          {index + 1}
+                        </span>
                       </TableCell>
                       <TableCell className="text-center font-body font-semibold text-foreground">
                         {student.roll_no}
@@ -156,26 +183,28 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
                           {student.points}
                         </span>
                       </TableCell>
-                      <TableCell>
-                        <div className="flex justify-center gap-1">
-                          {/* <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setEditingStudent(student)}
-                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                          >
-                            {<Pencil className="h-4 w-4" />}
-                          </Button> */}
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setDeletingStudent(student)}
-                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+                      {canDelete && (
+                        <TableCell>
+                          <div className="flex justify-center gap-1">
+                            {/* <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setEditingStudent(student)}
+                              className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                            >
+                              {<Pencil className="h-4 w-4" />}
+                            </Button> */}
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setDeletingStudent(student)}
+                              className="h-8 w-8 hover:bg-destructive/15 hover:text-destructive"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -193,17 +222,19 @@ export function PointsTable({ students, loading, onUpdate, onDelete }: PointsTab
       /> */}
 
       <AlertDialog open={!!deletingStudent} onOpenChange={(open) => !open && setDeletingStudent(null)}>
-        <AlertDialogContent className="bg-card border-2 border-border">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display">Delete Student?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display uppercase tracking-[0.12em] text-ivory">
+              Delete Student?
+            </AlertDialogTitle>
             <AlertDialogDescription className="font-body">
               Are you sure you want to remove{" "}
-              <strong>{deletingStudent?.roll_no}</strong> from the leaderboard?
+              <strong className="text-gold">{deletingStudent?.roll_no}</strong> from the leaderboard?
               This action cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="font-body">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="font-display">Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"

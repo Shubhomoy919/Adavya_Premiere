@@ -2,10 +2,19 @@ import { createContext, useContext, useEffect, useState, ReactNode } from "react
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
+/*
+  Roles live in the admin_roles table:
+    main      - full access, including Manage Admins
+    admin     - points + leaderboard, no Manage Admins
+    volunteer - points only; cannot delete players or read admin_roles
+                beyond their own row (enforced by RLS, not just the UI)
+*/
+export type Role = "main" | "admin" | "volunteer";
+
 interface AuthContextType {
   session: Session | null;
   user: User | null;
-  role: "main" | "admin" | null;
+  role: Role | null;
   loading: boolean;
   logout: () => Promise<void>;
 }
@@ -21,7 +30,7 @@ const AuthContext = createContext<AuthContextType>({
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
-  const [role, setRole] = useState<"main" | "admin" | null>(null);
+  const [role, setRole] = useState<Role | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -67,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error("Error fetching user role:", error);
         setRole(null);
       } else {
-        setRole(data?.role as "main" | "admin" | null);
+        setRole((data?.role as Role) ?? null);
       }
     } catch (err) {
       console.error("Unexpected error fetching role:", err);

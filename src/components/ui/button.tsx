@@ -5,24 +5,24 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap font-display text-sm font-semibold tracking-wide transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-card hover:bg-primary/90 hover:shadow-vintage rounded-sm",
+        /* Red-carpet gradient with a sweeping sheen — see .btn-premiere */
+        default: "btn-premiere rounded-sm",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-card hover:bg-destructive/90 rounded-sm",
+          "bg-destructive text-destructive-foreground border border-destructive/60 shadow-card hover:bg-destructive/90 hover:shadow-red rounded-sm",
         outline:
-          "border-2 border-primary bg-transparent text-primary hover:bg-primary hover:text-primary-foreground rounded-sm",
+          "border border-gold/45 bg-transparent text-gold hover:bg-gold/10 hover:border-gold/80 rounded-sm",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-card hover:bg-secondary/80 rounded-sm",
-        ghost: "text-foreground hover:bg-muted hover:text-foreground rounded-sm",
-        link: "text-primary underline-offset-4 hover:underline",
-        vintage:
-          "bg-gold text-ink shadow-vintage hover:brightness-110 border border-gold/20 rounded-sm",
+          "bg-secondary text-secondary-foreground border border-gold/15 shadow-card hover:bg-secondary/80 hover:border-gold/30 rounded-sm",
+        ghost: "text-muted-foreground hover:bg-gold/10 hover:text-gold rounded-sm",
+        link: "text-gold underline-offset-4 hover:underline hover:text-gold-light",
+        /* Gold foil — the VIP / primary-confirm action, see .btn-gold */
+        vintage: "btn-gold rounded-sm",
         elegant:
-          "bg-transparent border-2 border-gold text-gold hover:bg-gold hover:text-ink shadow-vintage rounded-sm",
+          "bg-transparent border border-gold/60 text-gold hover:bg-gold hover:text-onyx hover:shadow-gold rounded-sm",
       },
       size: {
         default: "h-10 px-5 py-2",

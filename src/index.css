@@ -1,4 +1,16 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+
+/*
+  Registers an animatable custom property so conic-gradients (foil border,
+  foil rotation) can be animated smoothly by the browser's compositor
+  instead of just snapping between values. Unsupported browsers simply
+  keep the initial angle — the effect still renders, just static.
+*/
+@property --foil-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
 
 @tailwind base;
 @tailwind components;
@@ -6,109 +18,229 @@
 
 @layer base {
   :root {
-    /* Retro Old Money Palette */
-    --background: 40 30% 96%;
-    --foreground: 25 30% 15%;
+    /* ==========================================
+       ADAVYA PREMIERE
+       Luxury Red Carpet / Film Premiere
+       ========================================== */
 
-    --card: 40 40% 94%;
-    --card-foreground: 25 30% 15%;
+    --background: 0 18% 7%;
+    --foreground: 0 20% 96%;
 
-    --popover: 40 40% 94%;
-    --popover-foreground: 25 30% 15%;
+    --card: 0 25% 11%;
+    --card-foreground: 0 20% 96%;
 
-    --primary: 0 45% 35%;
-    --primary-foreground: 40 30% 96%;
+    --popover: 0 25% 10%;
+    --popover-foreground: 0 20% 96%;
 
-    --secondary: 35 35% 85%;
-    --secondary-foreground: 25 30% 20%;
+    /* ADAVYA RED */
+    --primary: 0 68% 38%;
+    --primary-foreground: 0 20% 98%;
 
-    --muted: 35 20% 88%;
-    --muted-foreground: 25 15% 45%;
+    /* Velvet */
+    --secondary: 0 35% 18%;
+    --secondary-foreground: 0 15% 94%;
 
-    --accent: 38 70% 50%;
-    --accent-foreground: 25 30% 12%;
+    --muted: 0 18% 16%;
+    --muted-foreground: 0 10% 68%;
 
-    --destructive: 0 65% 45%;
-    --destructive-foreground: 40 30% 96%;
+    /* Premiere Gold */
+    --accent: 42 72% 55%;
+    --accent-foreground: 0 20% 7%;
 
-    --border: 30 25% 80%;
-    --input: 30 25% 82%;
-    --ring: 0 45% 35%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 20% 98%;
 
-    --radius: 0.25rem;
+    --border: 0 30% 27%;
+    --input: 0 25% 22%;
+    --ring: 42 72% 55%;
 
-    /* Retro custom tokens */
-    --gold: 38 70% 50%;
-    --burgundy: 0 45% 35%;
-    --cream: 40 30% 96%;
-    --sepia: 30 35% 75%;
-    --parchment: 40 40% 92%;
-    --ink: 25 30% 15%;
+    --radius: 0.35rem;
 
-    /* Gradients */
-    --gradient-paper: linear-gradient(180deg, hsl(40 40% 94%) 0%, hsl(35 35% 90%) 100%);
-    --gradient-gold: linear-gradient(135deg, hsl(38 70% 55%) 0%, hsl(38 60% 40%) 100%);
-    --gradient-vintage: linear-gradient(180deg, hsl(40 30% 96%) 0%, hsl(35 25% 88%) 50%, hsl(40 30% 96%) 100%);
+    /* ==========================================
+       ADAVYA BRAND COLORS
+       ========================================== */
 
-    /* Shadows */
-    --shadow-vintage: 0 4px 20px -4px hsl(25 30% 15% / 0.15);
-    --shadow-card: 0 2px 8px -2px hsl(25 30% 15% / 0.1), 0 1px 2px hsl(25 30% 15% / 0.08);
-    --shadow-elegant: 0 8px 30px -8px hsl(25 30% 15% / 0.2);
+    --red: 0 68% 38%;
+    --red-bright: 0 72% 47%;
+    --red-dark: 0 62% 24%;
+    --crimson: 0 55% 28%;
 
-    --sidebar-background: 40 40% 94%;
-    --sidebar-foreground: 25 30% 15%;
-    --sidebar-primary: 0 45% 35%;
-    --sidebar-primary-foreground: 40 30% 96%;
-    --sidebar-accent: 35 35% 88%;
-    --sidebar-accent-foreground: 25 30% 15%;
-    --sidebar-border: 30 25% 80%;
-    --sidebar-ring: 0 45% 35%;
+    --burgundy: 0 48% 17%;
+    --velvet: 0 35% 12%;
+
+    --black: 0 18% 5%;
+    --charcoal: 0 15% 9%;
+
+    --gold: 42 72% 55%;
+    --gold-light: 43 82% 70%;
+    --gold-dark: 38 58% 38%;
+
+    --ivory: 40 25% 94%;
+    --silver: 0 5% 72%;
+
+    --cream: 40 25% 94%;
+    --sepia: 25 25% 35%;
+    --parchment: 0 25% 11%;
+    --ink: 0 20% 96%;
+
+    /* ==========================================
+       PREMIUM GRADIENTS
+       ========================================== */
+
+    --gradient-premiere:
+      linear-gradient(
+        135deg,
+        hsl(0 60% 28%) 0%,
+        hsl(0 48% 17%) 45%,
+        hsl(0 18% 7%) 100%
+      );
+
+    --gradient-red:
+      linear-gradient(
+        135deg,
+        hsl(0 72% 45%) 0%,
+        hsl(0 65% 29%) 100%
+      );
+
+    --gradient-velvet:
+      linear-gradient(
+        145deg,
+        hsl(0 40% 17%) 0%,
+        hsl(0 25% 10%) 60%,
+        hsl(0 18% 7%) 100%
+      );
+
+    --gradient-gold:
+      linear-gradient(
+        135deg,
+        hsl(43 82% 70%) 0%,
+        hsl(42 72% 55%) 50%,
+        hsl(38 58% 38%) 100%
+      );
+
+    /*
+      Animatable foil gradient — shares --foil-angle with .foil-border and
+      .foil-ring so a single rotating custom property can drive multiple
+      elements in sync.
+    */
+    --gradient-foil:
+      conic-gradient(
+        from var(--foil-angle),
+        hsl(38 58% 38%) 0deg,
+        hsl(43 82% 70%) 90deg,
+        hsl(0 72% 47%) 180deg,
+        hsl(43 82% 70%) 270deg,
+        hsl(38 58% 38%) 360deg
+      );
+
+    --gradient-spotlight:
+      radial-gradient(
+        ellipse at 50% -20%,
+        hsl(0 72% 42% / 0.28),
+        transparent 60%
+      );
+
+    /* Multi-point mesh wash for hero / section backgrounds */
+    --gradient-aura:
+      radial-gradient(circle at 12% 18%, hsl(0 70% 35% / 0.32), transparent 42%),
+      radial-gradient(circle at 88% 12%, hsl(42 70% 45% / 0.16), transparent 38%),
+      radial-gradient(circle at 50% 92%, hsl(0 55% 20% / 0.4), transparent 48%);
+
+    --gradient-page:
+      linear-gradient(
+        180deg,
+        hsl(0 25% 9%) 0%,
+        hsl(0 18% 6%) 55%,
+        hsl(0 25% 8%) 100%
+      );
+
+    /* ==========================================
+       SHADOWS
+       ========================================== */
+
+    --shadow-premiere:
+      0 15px 45px hsl(0 60% 5% / 0.55);
+
+    --shadow-card:
+      0 8px 25px hsl(0 60% 5% / 0.4);
+
+    --shadow-red:
+      0 10px 35px hsl(0 70% 25% / 0.35);
+
+    --shadow-gold:
+      0 0 25px hsl(42 72% 55% / 0.15);
+
+    /* Additive elevation scale for anything that needs graduated depth */
+    --elevation-1: 0 2px 10px hsl(0 60% 3% / 0.35);
+    --elevation-2: 0 10px 28px hsl(0 60% 3% / 0.45);
+    --elevation-3: 0 22px 55px hsl(0 60% 3% / 0.55);
+    --elevation-4:
+      0 35px 90px hsl(0 60% 3% / 0.65),
+      0 0 45px hsl(0 68% 38% / 0.18);
+
+    /* Reusable film-grain texture, shared by body::before and .grain-overlay */
+    --noise-svg:
+      url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+
+    /* Sidebar */
+
+    --sidebar-background: 0 22% 8%;
+    --sidebar-foreground: 0 20% 94%;
+    --sidebar-primary: 0 68% 38%;
+    --sidebar-primary-foreground: 0 20% 98%;
+    --sidebar-accent: 0 30% 16%;
+    --sidebar-accent-foreground: 0 20% 94%;
+    --sidebar-border: 0 30% 25%;
+    --sidebar-ring: 42 72% 55%;
+
+    color-scheme: dark;
+    accent-color: hsl(var(--gold));
   }
 
   .dark {
-    --background: 25 25% 10%;
-    --foreground: 40 25% 90%;
+    --background: 0 18% 7%;
+    --foreground: 0 20% 96%;
 
-    --card: 25 20% 14%;
-    --card-foreground: 40 25% 90%;
+    --card: 0 25% 11%;
+    --card-foreground: 0 20% 96%;
 
-    --popover: 25 20% 14%;
-    --popover-foreground: 40 25% 90%;
+    --popover: 0 25% 10%;
+    --popover-foreground: 0 20% 96%;
 
-    --primary: 38 65% 55%;
-    --primary-foreground: 25 25% 10%;
+    --primary: 0 68% 42%;
+    --primary-foreground: 0 20% 98%;
 
-    --secondary: 25 15% 20%;
-    --secondary-foreground: 40 25% 85%;
+    --secondary: 0 35% 18%;
+    --secondary-foreground: 0 15% 94%;
 
-    --muted: 25 15% 18%;
-    --muted-foreground: 35 15% 55%;
+    --muted: 0 18% 16%;
+    --muted-foreground: 0 10% 68%;
 
-    --accent: 0 40% 45%;
-    --accent-foreground: 40 25% 90%;
+    --accent: 42 72% 55%;
+    --accent-foreground: 0 20% 7%;
 
-    --destructive: 0 60% 40%;
-    --destructive-foreground: 40 25% 90%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 0 20% 98%;
 
-    --border: 25 15% 22%;
-    --input: 25 15% 25%;
-    --ring: 38 65% 55%;
+    --border: 0 30% 27%;
+    --input: 0 25% 22%;
+    --ring: 42 72% 55%;
 
-    --gold: 38 65% 55%;
-    --burgundy: 0 40% 45%;
-    --cream: 40 25% 90%;
-    --sepia: 30 20% 30%;
-    --parchment: 25 20% 16%;
-    --ink: 40 25% 90%;
+    --gold: 42 72% 55%;
+    --burgundy: 0 48% 17%;
+    --cream: 40 25% 94%;
+    --sepia: 25 25% 35%;
+    --parchment: 0 25% 11%;
+    --ink: 0 20% 96%;
 
-    --sidebar-background: 25 20% 12%;
-    --sidebar-foreground: 40 25% 90%;
-    --sidebar-primary: 38 65% 55%;
-    --sidebar-primary-foreground: 25 25% 10%;
-    --sidebar-accent: 25 15% 18%;
-    --sidebar-accent-foreground: 40 25% 90%;
-    --sidebar-border: 25 15% 22%;
-    --sidebar-ring: 38 65% 55%;
+    --sidebar-background: 0 22% 8%;
+    --sidebar-foreground: 0 20% 94%;
+    --sidebar-primary: 0 68% 42%;
+    --sidebar-primary-foreground: 0 20% 98%;
+    --sidebar-accent: 0 30% 16%;
+    --sidebar-accent-foreground: 0 20% 94%;
+    --sidebar-border: 0 30% 25%;
+    --sidebar-ring: 42 72% 55%;
   }
 }
 
@@ -120,60 +252,990 @@
   html {
     overflow-x: hidden;
     max-width: 100vw;
+    background: hsl(var(--black));
   }
 
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply bg-background text-foreground antialiased;
+
     overflow-x: hidden;
     max-width: 100vw;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-    background-blend-mode: overlay;
-    background-size: 200px 200px;
+
+    font-family: 'DM Sans', sans-serif;
+
+    background: var(--gradient-aura), var(--gradient-page);
+
+    background-attachment: fixed;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  /*
+    SUBTLE FILM GRAIN
+  */
+
+  body::before {
+    content: "";
+
+    position: fixed;
+    inset: 0;
+
+    pointer-events: none;
+
+    z-index: 9999;
+
+    opacity: 0.025;
+
+    background-image: var(--noise-svg);
+
+    background-size: 180px 180px;
+  }
+
+  /*
+    IMPORTANT:
+    Headings stay bright and visible.
+  */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-display;
+
+    color: hsl(var(--ivory));
+
+    text-wrap: balance;
+  }
+
+  /*
+    Fluid sizing + a tracking scale that loosens as text gets smaller
+    (tight negative tracking reads well at display sizes, but the same
+    value pinches small headings) — only applies when a component hasn't
+    already set its own size/tracking via Tailwind utilities, since the
+    utilities layer always wins over base regardless of specificity.
+  */
+
+  h1 {
+    font-size: clamp(2.25rem, 1.6rem + 2.5vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 1.4rem + 1.4vw, 2.75rem);
+    line-height: 1.12;
+    letter-spacing: -0.028em;
+  }
+
+  h3 {
+    font-size: clamp(1.375rem, 1.15rem + 0.7vw, 1.875rem);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+
+  h4 {
+    letter-spacing: -0.015em;
+  }
+
+  h5,
+  h6 {
+    letter-spacing: -0.01em;
+  }
+
+  /*
+    Explicit heading visibility
+  */
+
+  .text-foreground {
+    color: hsl(var(--foreground));
+  }
+
+  /* ==========================================
+     ACCESSIBLE + PREMIUM DEFAULTS
+     ========================================== */
+
+  ::selection {
+    background: hsl(var(--red-bright) / 0.4);
+    color: hsl(var(--ivory));
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--gold));
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--gold) / 0.7) hsl(var(--black));
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--black));
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, hsl(var(--gold)), hsl(var(--red-bright)));
+    border-radius: 999px;
+    border: 2px solid hsl(var(--black));
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--gold-light));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
 @layer utilities {
+
+  /* ==========================================
+     FONTS
+     ========================================== */
+
   .font-display {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Cinzel', serif;
   }
 
   .font-body {
-    font-family: 'Crimson Text', serif;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ==========================================
+     ADAVYA LOGO / TITLE
+     ========================================== */
+
+  .text-premiere {
+    color: hsl(var(--ivory));
+
+    text-shadow:
+      0 2px 20px hsl(0 0% 0% / 0.55);
   }
 
   .text-gradient-gold {
-    background: linear-gradient(135deg, hsl(38 70% 55%) 0%, hsl(38 60% 40%) 100%);
+    background: var(--gradient-gold);
+
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+
     background-clip: text;
   }
 
-  .border-ornate {
-    border: 2px solid hsl(var(--border));
-    border-image: linear-gradient(135deg, hsl(var(--gold)), hsl(var(--sepia)), hsl(var(--gold))) 1;
+  .text-gradient-red {
+    background: var(--gradient-red);
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    background-clip: text;
+  }
+
+  /*
+    Animated gold-foil text — a slow diagonal sheen rather than a static
+    gradient fill. Best on short strings (titles, "VIP", price tags).
+  */
+  .text-foil {
+    background: linear-gradient(
+      100deg,
+      hsl(var(--gold-dark)) 20%,
+      hsl(var(--gold-light)) 40%,
+      hsl(var(--ivory)) 50%,
+      hsl(var(--gold-light)) 60%,
+      hsl(var(--gold-dark)) 80%
+    );
+    background-size: 250% 100%;
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+
+    animation: foilSweep 3.5s ease-in-out infinite;
+  }
+
+  /* ==========================================
+     LOGIN / AUTH HEADING
+     ========================================== */
+
+  .auth-title {
+    font-family: 'Cinzel', serif;
+
+    color: hsl(var(--ivory));
+
+    font-weight: 600;
+
+    text-shadow:
+      0 3px 25px hsl(0 0% 0% / 0.6);
+  }
+
+  .auth-subtitle {
+    color: hsl(0 10% 72%);
+  }
+
+  /* ==========================================
+     PREMIERE CARD
+     ========================================== */
+
+  .card-premiere {
+    position: relative;
+
+    background:
+      linear-gradient(
+        145deg,
+        hsl(0 35% 15% / 0.96),
+        hsl(0 20% 9% / 0.98)
+      );
+
+    border: 1px solid hsl(0 45% 30% / 0.55);
+
+    box-shadow:
+      0 20px 60px hsl(0 70% 5% / 0.5),
+      inset 0 1px 0 hsl(0 0% 100% / 0.045);
+
+    backdrop-filter: blur(12px);
+
+    transition:
+      border-color 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card-premiere::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 8%;
+    right: 8%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.7), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .card-premiere:hover {
+    border-color: hsl(42 72% 55% / 0.4);
+    transform: translateY(-6px);
+
+    box-shadow:
+      0 25px 70px hsl(0 70% 5% / 0.6),
+      0 0 30px hsl(0 65% 30% / 0.12);
+  }
+
+  .card-premiere:hover::before {
+    opacity: 1;
   }
 
   .card-vintage {
-    background: linear-gradient(180deg, hsl(var(--card)) 0%, hsl(35 35% 90%) 100%);
+    background:
+      linear-gradient(
+        145deg,
+        hsl(0 35% 15%),
+        hsl(0 20% 9%)
+      );
+
     box-shadow: var(--shadow-card);
   }
 
+  /*
+    Frosted glass panel for content that floats over imagery or the aura
+    background — heavier blur + saturation boost than .card-premiere.
+  */
+  .glass-premiere {
+    background: hsl(0 30% 14% / 0.45);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border: 1px solid hsl(var(--gold) / 0.25);
+    box-shadow:
+      0 8px 32px hsl(0 60% 3% / 0.45),
+      inset 0 1px 0 hsl(0 0% 100% / 0.06);
+  }
+
+  /* Graduated depth utilities, paired with --elevation-1..4 */
+  .elevation-1 { box-shadow: var(--elevation-1); }
+  .elevation-2 { box-shadow: var(--elevation-2); }
+  .elevation-3 { box-shadow: var(--elevation-3); }
+  .elevation-4 { box-shadow: var(--elevation-4); }
+
+  /* ==========================================
+     RED CARPET
+     ========================================== */
+
+  .red-carpet {
+    position: relative;
+    isolation: isolate;
+
+    background:
+      linear-gradient(
+        90deg,
+        hsl(0 18% 5%) 0%,
+        hsl(0 60% 25%) 12%,
+        hsl(0 72% 34%) 35%,
+        hsl(0 65% 27%) 65%,
+        hsl(0 60% 25%) 88%,
+        hsl(0 18% 5%) 100%
+      );
+
+    box-shadow:
+      0 0 50px hsl(0 70% 30% / 0.3);
+
+    border-top:
+      1px solid hsl(42 72% 55% / 0.3);
+
+    border-bottom:
+      1px solid hsl(42 72% 55% / 0.3);
+  }
+
+  .red-carpet::before,
+  .red-carpet::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-image: repeating-radial-gradient(
+      circle,
+      hsl(var(--gold-light)) 0px,
+      hsl(var(--gold-light)) 1.5px,
+      transparent 2px,
+      transparent 18px
+    );
+    background-size: 18px 4px;
+    filter: drop-shadow(0 0 3px hsl(var(--gold) / 0.8));
+    animation: marqueeChase 1.1s linear infinite;
+    pointer-events: none;
+  }
+
+  .red-carpet::before {
+    top: 0;
+  }
+
+  .red-carpet::after {
+    bottom: 0;
+    animation-direction: reverse;
+  }
+
+  /* ==========================================
+     GOLD BORDER
+     ========================================== */
+
+  .border-gold {
+    border: 1px solid hsl(var(--gold) / 0.55);
+
+    box-shadow:
+      inset 0 0 0 1px hsl(var(--gold) / 0.06);
+  }
+
+  .border-ornate {
+    border: 1px solid transparent;
+
+    border-image:
+      linear-gradient(
+        135deg,
+        hsl(var(--gold)),
+        hsl(var(--red)),
+        hsl(var(--gold))
+      ) 1;
+  }
+
+  /*
+    Rotating gold-and-crimson foil ring. Add to a relatively-positioned,
+    rounded element: <div class="relative rounded-xl foil-border">.
+    Uses the mask-exclude technique so only the ring itself is painted —
+    the element's own background stays untouched.
+  */
+  .foil-border {
+    position: relative;
+    border-radius: inherit;
+  }
+
+  .foil-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: var(--gradient-foil);
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: foilRotate 4s linear infinite;
+    pointer-events: none;
+  }
+
+  /* ==========================================
+     GOLD DIVIDER
+     ========================================== */
+
+  .gold-divider {
+    height: 1px;
+
+    width: 100%;
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        hsl(var(--gold) / 0.8),
+        transparent
+      );
+
+    box-shadow:
+      0 0 15px hsl(var(--gold) / 0.2);
+  }
+
+  /* ==========================================
+     CINEMATIC SPOTLIGHT
+     ========================================== */
+
+  .spotlight {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spotlight::before {
+    content: "";
+
+    position: absolute;
+
+    top: -70%;
+    left: 50%;
+
+    width: 65%;
+    height: 180%;
+
+    transform:
+      translateX(-50%)
+      rotate(8deg);
+
+    background:
+      linear-gradient(
+        90deg,
+        transparent,
+        hsl(0 0% 100% / 0.035),
+        transparent
+      );
+
+    pointer-events: none;
+  }
+
+  /*
+    Cursor-following spotlight. Set --x / --y from a mousemove listener:
+      el.style.setProperty('--x', `${offsetX}px`)
+      el.style.setProperty('--y', `${offsetY}px`)
+    Falls back to a centered glow if the properties are never set, so it
+    degrades gracefully with JS disabled.
+  */
+  .spotlight-follow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .spotlight-follow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle 220px at var(--x, 50%) var(--y, 50%),
+      hsl(var(--gold) / 0.16),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .spotlight-follow:hover::after {
+    opacity: 1;
+  }
+
+  /* Radial vignette for imagery / hero backgrounds */
+  .vignette {
+    position: relative;
+  }
+
+  .vignette::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      hsl(0 30% 3% / 0.75) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Multi-point mesh wash, paired with --gradient-aura */
+  .bg-aura {
+    background: var(--gradient-aura), var(--gradient-page);
+  }
+
+  /* Reusable film-grain, for cards or sections beyond the page body */
+  .grain-overlay {
+    position: relative;
+  }
+
+  .grain-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: var(--noise-svg);
+    background-size: 180px 180px;
+  }
+
+  /* ==========================================
+     FILM STRIP
+     ========================================== */
+
+  .film-strip {
+    background:
+      repeating-linear-gradient(
+        90deg,
+        hsl(0 12% 5%) 0px,
+        hsl(0 12% 5%) 26px,
+        hsl(0 10% 12%) 26px,
+        hsl(0 10% 12%) 32px
+      );
+
+    border-top:
+      1px solid hsl(var(--gold) / 0.2);
+
+    border-bottom:
+      1px solid hsl(var(--gold) / 0.2);
+  }
+
+  /*
+    Chasing marquee bulbs along the top and bottom edge of an element —
+    add to a relatively-positioned container, e.g. a hero band or header.
+  */
+  .marquee-lights {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .marquee-lights::before,
+  .marquee-lights::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background-image: repeating-radial-gradient(
+      circle,
+      hsl(var(--gold-light)) 0px,
+      hsl(var(--gold-light)) 2px,
+      transparent 2.5px,
+      transparent 22px
+    );
+    background-size: 22px 6px;
+    filter: drop-shadow(0 0 4px hsl(var(--gold) / 0.8));
+    animation: marqueeChase 1.1s linear infinite;
+    pointer-events: none;
+  }
+
+  .marquee-lights::before {
+    top: -3px;
+  }
+
+  .marquee-lights::after {
+    bottom: -3px;
+    animation-direction: reverse;
+  }
+
+  /*
+    Ticket-stub shape: two notches punched from the long edges plus a
+    dashed tear line. The notch color assumes it sits on the page
+    background (--black) — override it if the ticket sits on something
+    else. Usage:
+      <div class="ticket-premiere flex">
+        <div class="p-6 flex-1">...main stub...</div>
+        <div class="ticket-divider"></div>
+        <div class="p-4 w-28">...small stub...</div>
+      </div>
+  */
+  .ticket-premiere {
+    position: relative;
+    background: var(--gradient-velvet);
+    border: 1px solid hsl(var(--gold) / 0.4);
+    border-radius: 10px;
+  }
+
+  .ticket-premiere::before,
+  .ticket-premiere::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    background: hsl(var(--black));
+    border-radius: 50%;
+    transform: translateY(-50%);
+  }
+
+  .ticket-premiere::before {
+    left: -10px;
+  }
+
+  .ticket-premiere::after {
+    right: -10px;
+  }
+
+  .ticket-divider {
+    border-left: 2px dashed hsl(var(--gold) / 0.4);
+  }
+
+  /* Film-reel loading spinner — six punched holes on a spinning gold disc */
+  .reel-spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle 6px at 50% 15%, hsl(var(--black)) 98%, transparent 100%),
+      radial-gradient(circle 6px at 85% 38%, hsl(var(--black)) 98%, transparent 100%),
+      radial-gradient(circle 6px at 85% 72%, hsl(var(--black)) 98%, transparent 100%),
+      radial-gradient(circle 6px at 50% 90%, hsl(var(--black)) 98%, transparent 100%),
+      radial-gradient(circle 6px at 15% 72%, hsl(var(--black)) 98%, transparent 100%),
+      radial-gradient(circle 6px at 15% 38%, hsl(var(--black)) 98%, transparent 100%),
+      conic-gradient(
+        from 0deg,
+        hsl(var(--gold-light)),
+        hsl(var(--gold)) 40%,
+        hsl(var(--gold-dark)) 70%,
+        hsl(var(--gold-light))
+      );
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.4);
+    animation: reelSpin 1.4s linear infinite;
+  }
+
+  /*
+    Velvet curtain parting on load — a single orchestrated reveal, meant
+    for one hero or modal per view rather than every section.
+  */
+  .curtain-reveal {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .curtain-reveal::before,
+  .curtain-reveal::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 52%;
+    background: var(--gradient-premiere);
+    box-shadow: inset 0 0 60px hsl(0 0% 0% / 0.5);
+    z-index: 30;
+    animation: curtainOpen 1.1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    pointer-events: none;
+  }
+
+  .curtain-reveal::before {
+    left: 0;
+    transform-origin: left;
+  }
+
+  .curtain-reveal::after {
+    right: 0;
+    transform-origin: right;
+  }
+
+  /* Brief white flash on click — a paparazzi camera-flash confirmation */
+  .flash-pop {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flash-pop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: hsl(0 0% 100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .flash-pop:active::after {
+    animation: flashBurst 0.4s ease-out;
+  }
+
+  /* ==========================================
+     PREMIERE BUTTON
+     ========================================== */
+
+  .btn-premiere {
+    position: relative;
+    overflow: hidden;
+
+    background:
+      linear-gradient(
+        135deg,
+        hsl(0 72% 43%),
+        hsl(0 65% 28%)
+      );
+
+    color: hsl(var(--ivory));
+
+    border:
+      1px solid hsl(42 72% 55% / 0.45);
+
+    box-shadow:
+      0 8px 25px hsl(0 70% 20% / 0.35);
+
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      background 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-premiere::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, hsl(0 0% 100% / 0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .btn-premiere:hover {
+    transform: translateY(-2px);
+
+    background:
+      linear-gradient(
+        135deg,
+        hsl(0 75% 48%),
+        hsl(0 68% 32%)
+      );
+
+    box-shadow:
+      0 12px 35px hsl(0 70% 25% / 0.45);
+  }
+
+  .btn-premiere:hover::after {
+    left: 130%;
+  }
+
+  /* Gold counterpart to .btn-premiere, for a secondary/VIP call to action */
+  .btn-gold {
+    position: relative;
+    overflow: hidden;
+
+    background: var(--gradient-gold);
+    color: hsl(var(--black));
+    border: 1px solid hsl(0 0% 100% / 0.25);
+    box-shadow: 0 8px 25px hsl(42 70% 30% / 0.35);
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      filter 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .btn-gold::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, hsl(0 0% 100% / 0.5), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    box-shadow: 0 12px 35px hsl(42 70% 35% / 0.5);
+  }
+
+  .btn-gold:hover::after {
+    left: 130%;
+  }
+
+  /* Small pill badge for VIP / premium tags */
+  .badge-vip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--black));
+    background: var(--gradient-gold);
+    box-shadow: var(--shadow-gold);
+  }
+
+  /* ==========================================
+     NEXT-LEVEL INTERACTIONS
+     ========================================== */
+
+  /*
+    3D tilt card. Give the same element a child with class "tilt-glare"
+    for the moving sheen. Requires JS to set --rx/--ry (rotation) and
+    --x/--y (glare position) from mouse position — see the showcase
+    page's script for the exact listener. Without JS the card just sits
+    flat; it never breaks, it simply loses the tilt.
+  */
+  .tilt-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
+    transition: transform 0.15s ease-out;
+  }
+
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle at var(--x, 50%) var(--y, 50%),
+      hsl(0 0% 100% / 0.16),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .tilt-card:hover .tilt-glare {
+    opacity: 1;
+  }
+
+  /*
+    Magnetic pull toward the cursor. Requires JS to translate the
+    element within some radius and reset it on mouseleave — see the
+    showcase page's script. This class only supplies the easing back
+    to rest.
+  */
+  .magnetic {
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /*
+    Infinite "now showing" ticker — pure CSS, no JS. Duplicate the
+    content once inside .ticker__track so the loop is seamless:
+      <div class="ticker">
+        <div class="ticker__track">
+          <span>Item A</span><span>Item B</span>
+          <span>Item A</span><span>Item B</span>
+        </div>
+      </div>
+  */
+  .ticker {
+    overflow: hidden;
+    white-space: nowrap;
+    border-top: 1px solid hsl(var(--gold) / 0.3);
+    border-bottom: 1px solid hsl(var(--gold) / 0.3);
+    background: hsl(var(--black));
+  }
+
+  .ticker__track {
+    display: inline-flex;
+    gap: 3rem;
+    padding-block: 0.85rem;
+    animation: tickerScroll 24s linear infinite;
+  }
+
+  .ticker__track span {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.04em;
+    color: hsl(var(--gold-light));
+  }
+
+  /*
+    Scroll-driven reveal — animates purely from scroll position, no JS
+    and no Intersection Observer. Browsers without support for
+    animation-timeline render the element normally with no hidden
+    state, so this only ever adds polish, never hides content.
+  */
+  .scroll-reveal {
+    opacity: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    .scroll-reveal {
+      opacity: 0;
+      animation: revealUp linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+
+  /* Subtle old-projector brightness flicker, for hero backdrops */
+  .film-flicker {
+    animation: filmFlicker 6s infinite steps(1);
+  }
+
+  /*
+    Refractive "liquid glass" — like .glass-premiere, but the backdrop
+    blur is displaced through an SVG turbulence filter for a rippled,
+    water-like distortion. Requires the SVG filter defined once per
+    page (costs nothing extra per element that references it):
+      <svg width="0" height="0" style="position:absolute">
+        <filter id="liquid-glass" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.008 0.012" numOctaves="2" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+        </filter>
+      </svg>
+  */
+  .liquid-glass {
+    background: hsl(0 30% 14% / 0.4);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    filter: url(#liquid-glass);
+    border: 1px solid hsl(var(--gold) / 0.25);
+  }
+
+  /* ==========================================
+     ANIMATIONS
+     ========================================== */
+
   .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
+    animation: fadeIn 0.6s ease-out forwards;
   }
 
   .animate-slide-up {
-    animation: slideUp 0.4s ease-out forwards;
+    animation: slideUp 0.5s ease-out forwards;
+  }
+
+  .animate-premiere {
+    animation: premiereReveal 0.8s ease-out forwards;
+  }
+
+  .animate-glow {
+    animation: cinematicGlow 3s ease-in-out infinite;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
     }
+
     to {
       opacity: 1;
     }
@@ -184,9 +1246,141 @@
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes premiereReveal {
+    from {
+      opacity: 0;
+      transform: translateY(25px) scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes cinematicGlow {
+    0%,
+    100% {
+      box-shadow:
+        0 0 15px hsl(0 70% 30% / 0.12);
+    }
+
+    50% {
+      box-shadow:
+        0 0 30px hsl(0 70% 35% / 0.28);
+    }
+  }
+
+  @keyframes foilRotate {
+    to {
+      --foil-angle: 360deg;
+    }
+  }
+
+  @keyframes foilSweep {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @keyframes marqueeChase {
+    to {
+      background-position: 22px 0;
+    }
+  }
+
+  @keyframes curtainOpen {
+    from {
+      transform: scaleX(1);
+    }
+
+    to {
+      transform: scaleX(0);
+    }
+  }
+
+  @keyframes flashBurst {
+    0% {
+      opacity: 0.85;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes reelSpin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes tickerScroll {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes revealUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes filmFlicker {
+    0%,
+    100% {
+      opacity: 0.98;
+    }
+
+    8% {
+      opacity: 0.9;
+    }
+
+    10% {
+      opacity: 1;
+    }
+
+    22% {
+      opacity: 0.95;
+    }
+
+    35% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.92;
+    }
+
+    63% {
+      opacity: 1;
+    }
+
+    80% {
+      opacity: 0.96;
     }
   }
 }

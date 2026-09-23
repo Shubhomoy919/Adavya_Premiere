@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { useAdmins } from "@/hooks/useAdmins";
-import { useAuth } from "@/lib/auth";
+import { useAuth, type Role } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,16 +30,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import LogoutButton from "@/components/LogoutButton";
-import { Loader2, Trash2, Info } from "lucide-react";
+import { Loader2, Trash2, Info, ShieldCheck, Plus, UserPlus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function ManageAdmins() {
   const { role, session, loading: authLoading } = useAuth();
-  const { admins, loading, deleteAdmin } = useAdmins();
+  const { admins, loading, addAdmin, updateRole, deleteAdmin } = useAdmins();
   const { toast } = useToast();
 
   const [selectedAdmin, setSelectedAdmin] = useState<any | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  // "Grant role" form
+  const [newId, setNewId] = useState("");
+  const [newRollNo, setNewRollNo] = useState("");
+  const [newRole, setNewRole] = useState<Role>("volunteer");
+  const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
     if (!authLoading) {
@@ -41,6 +56,34 @@ export default function ManageAdmins() {
       }
     }
   }, [session, role, authLoading]);
+
+  const handleAdd = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newId.trim() || !newRollNo.trim()) return;
+
+    setIsAdding(true);
+    const errorMessage = await addAdmin(newId.trim(), newRollNo.trim().toUpperCase(), newRole);
+    setIsAdding(false);
+
+    if (errorMessage) {
+      toast({ title: "Error granting role", description: errorMessage, variant: "destructive" });
+      return;
+    }
+
+    setNewId("");
+    setNewRollNo("");
+    setNewRole("volunteer");
+    toast({ title: `Role granted`, description: `${newRollNo.toUpperCase()} is now a ${newRole}.` });
+  };
+
+  const handleRoleChange = async (id: string, nextRole: Role) => {
+    const ok = await updateRole(id, nextRole);
+    toast(
+      ok
+        ? { title: "Role updated" }
+        : { title: "Error updating role", variant: "destructive" },
+    );
+  };
 
   const handleDelete = async () => {
     if (!selectedAdmin) return;
@@ -60,44 +103,137 @@ export default function ManageAdmins() {
 
   if (authLoading || role !== "main") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f3e4c6]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#3b2f2f]" />
+      <div className="min-h-screen flex flex-col items-center justify-center gap-5 bg-aura">
+        <div className="reel-spinner" />
+        <p className="font-display text-xs uppercase tracking-[0.3em] text-gold/70">
+          Adavya Premiere
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#f3e4c6] p-4 sm:p-6">
+    <div className="min-h-screen p-4 sm:p-6">
       {/* Logout Button */}
-      <div className="flex justify-end mb-4">
-        <LogoutButton />
+      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+        <span className="font-display text-xs uppercase tracking-[0.25em] text-gold/70">
+          Adavya Premiere
+        </span>
+        <div className="flex items-center gap-2">
+          <Button
+            onClick={() => (window.location.href = "/points")}
+            variant="elegant"
+            size="sm"
+            className="uppercase tracking-[0.15em]"
+          >
+            <Plus className="h-4 w-4" />
+            Add Points
+          </Button>
+          <LogoutButton />
+        </div>
       </div>
 
-      <div className="card-vintage rounded-sm border-2 border-border animate-slide-up overflow-hidden">
+      <div className="card-premiere rounded-md animate-slide-up overflow-hidden">
         {/* Header */}
-        <div className="flex items-center gap-2 p-4 sm:p-6 border-b border-border">
-          <div className="w-1 h-5 sm:h-6 bg-burgundy rounded-full" />
-          <h2 className="font-display text-lg sm:text-xl font-semibold text-foreground">
+        <div className="flex items-center gap-2 sm:gap-3 p-4 sm:p-6 border-b border-gold/20">
+          <ShieldCheck className="h-5 w-5 shrink-0 text-gold" />
+          <h2 className="font-display text-lg sm:text-xl font-semibold uppercase tracking-[0.12em] text-ivory">
             Manage Admins
           </h2>
           <span className="ml-auto font-body text-xs sm:text-sm text-muted-foreground">
-            {admins.length} {admins.length === 1 ? "admin" : "admins"}
+            {admins.length} {admins.length === 1 ? "account" : "accounts"}
           </span>
         </div>
 
         {/* Add Admin Instructions */}
-        <div className="p-4 sm:p-6 border-b border-border bg-[#fffaf3] flex items-start gap-3">
-          <Info className="h-5 w-5 text-[#3b2f2f] mt-0.5 shrink-0" />
-          <p className="text-sm text-[#3b2f2f]">
-            <strong>Note:</strong> To create a new admin, please use the Supabase Auth Dashboard to create their account, and then insert a row into the <code>admin_roles</code> table with their UUID.
+        <div className="p-4 sm:p-6 border-b border-gold/20 bg-onyx/40 flex items-start gap-3">
+          <Info className="h-5 w-5 text-gold mt-0.5 shrink-0" />
+          <p className="font-body text-sm text-muted-foreground">
+            <strong className="text-ivory">Note:</strong> Create the account in the Supabase Auth Dashboard first, then paste its UUID below to grant a role. A <strong className="text-ivory">volunteer</strong> can add points but cannot open this page or remove players.
           </p>
         </div>
 
+        {/* Grant a role to an existing auth user */}
+        <form onSubmit={handleAdd} className="p-4 sm:p-6 border-b border-gold/20 space-y-4">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <UserPlus className="h-5 w-5 shrink-0 text-gold" />
+            <h3 className="font-display text-sm sm:text-base font-semibold uppercase tracking-[0.12em] text-ivory">
+              Grant Role
+            </h3>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="new-id" className="font-display text-xs uppercase tracking-[0.15em] text-gold/80">
+                Auth User UUID *
+              </Label>
+              <Input
+                id="new-id"
+                value={newId}
+                onChange={(e) => setNewId(e.target.value)}
+                required
+                className="font-mono text-sm"
+                placeholder="00000000-0000-0000-0000-000000000000"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="new-roll-no" className="font-display text-xs uppercase tracking-[0.15em] text-gold/80">
+                Roll Number *
+              </Label>
+              <Input
+                id="new-roll-no"
+                value={newRollNo}
+                onChange={(e) => setNewRollNo(e.target.value)}
+                required
+                className="font-body text-base"
+                placeholder="2026BCS0001"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label className="font-display text-xs uppercase tracking-[0.15em] text-gold/80">
+                Role
+              </Label>
+              <Select value={newRole} onValueChange={(value) => setNewRole(value as Role)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="volunteer">Volunteer</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Button
+            type="submit"
+            variant="vintage"
+            className="w-full sm:w-auto uppercase tracking-[0.15em]"
+            disabled={isAdding || !newId.trim() || !newRollNo.trim()}
+          >
+            {isAdding ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Granting...
+              </>
+            ) : (
+              <>
+                <UserPlus className="h-4 w-4" />
+                Grant Role
+              </>
+            )}
+          </Button>
+        </form>
+
         {/* Loading */}
         {loading && (
-          <div className="p-8 sm:p-12 flex flex-col items-center">
-            <Loader2 className="h-8 w-8 animate-spin text-gold mb-4" />
-            <p className="font-body text-muted-foreground">Loading admins...</p>
+          <div className="p-8 sm:p-12 flex flex-col items-center gap-4">
+            <div className="reel-spinner" />
+            <p className="font-display text-sm uppercase tracking-[0.2em] text-muted-foreground">
+              Loading admins...
+            </p>
           </div>
         )}
 
@@ -105,7 +241,7 @@ export default function ManageAdmins() {
         {!loading && admins.length === 0 && (
           <div className="p-8 sm:p-12 text-center">
             <p className="font-body text-muted-foreground text-base sm:text-lg">
-              No admins found in the admin_roles table.
+              No accounts found in the admin_roles table.
             </p>
           </div>
         )}
@@ -114,19 +250,34 @@ export default function ManageAdmins() {
         {!loading && admins.length > 0 && (
           <>
             {/* Mobile Card View */}
-            <div className="block sm:hidden divide-y divide-border">
+            <div className="block sm:hidden divide-y divide-gold/10">
               {admins.map((adm) => (
                 <div
                   key={adm.id}
-                  className="p-4 flex items-center gap-3 hover:bg-secondary/30 transition-colors"
+                  className="p-4 flex items-center gap-3 hover:bg-carpet/15 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
                     <p className="font-body font-semibold text-foreground truncate">
                       {adm.roll_no || adm.id.substring(0, 8) + '...'}
                     </p>
-                    <p className="text-xs text-muted-foreground capitalize">
-                      {adm.role}
-                    </p>
+                    {adm.role === "main" ? (
+                      <p className="font-display text-xs uppercase tracking-[0.15em] text-gold/70">
+                        {adm.role}
+                      </p>
+                    ) : (
+                      <Select
+                        value={adm.role}
+                        onValueChange={(value) => handleRoleChange(adm.id, value as Role)}
+                      >
+                        <SelectTrigger className="mt-1 h-9 w-36 text-sm">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="volunteer">Volunteer</SelectItem>
+                          <SelectItem value="admin">Admin</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
                   </div>
 
                   {/* Delete button only for normal admins */}
@@ -135,7 +286,7 @@ export default function ManageAdmins() {
                       variant="ghost"
                       size="icon"
                       onClick={() => setSelectedAdmin(adm)}
-                      className="h-9 w-9 text-muted-foreground hover:text-destructive"
+                      className="h-9 w-9 hover:bg-destructive/15 hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -148,14 +299,14 @@ export default function ManageAdmins() {
             <div className="hidden sm:block overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow className="border-border hover:bg-transparent">
-                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground">
+                  <TableRow className="hover:bg-transparent">
+                    <TableHead>
                       Identifier (Roll No / ID)
                     </TableHead>
-                    <TableHead className="font-display text-xs uppercase tracking-wider text-muted-foreground text-center">
+                    <TableHead className="text-center">
                       Role
                     </TableHead>
-                    <TableHead className="w-24 text-center font-display text-xs uppercase tracking-wider text-muted-foreground">
+                    <TableHead className="w-24 text-center">
                       Actions
                     </TableHead>
                   </TableRow>
@@ -163,21 +314,35 @@ export default function ManageAdmins() {
 
                 <TableBody>
                   {admins.map((adm) => (
-                    <TableRow
-                      key={adm.id}
-                      className="border-border hover:bg-secondary/50 transition-colors"
-                    >
+                    <TableRow key={adm.id}>
                       <TableCell className="font-body font-semibold text-foreground">
                         {adm.roll_no || adm.id}
                       </TableCell>
 
-                      <TableCell className="text-center capitalize">
-                        {adm.role}
+                      <TableCell className="text-center">
+                        {adm.role === "main" ? (
+                          <span className="font-display uppercase tracking-[0.12em] text-gold/80">
+                            {adm.role}
+                          </span>
+                        ) : (
+                          <Select
+                            value={adm.role}
+                            onValueChange={(value) => handleRoleChange(adm.id, value as Role)}
+                          >
+                            <SelectTrigger className="mx-auto h-9 w-40 text-sm">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="volunteer">Volunteer</SelectItem>
+                              <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
                       </TableCell>
 
                       <TableCell>
                         {adm.role === "main" ? (
-                          <span className="text-xs italic text-muted-foreground">
+                          <span className="block text-center font-body text-xs italic text-muted-foreground">
                             Main Admin
                           </span>
                         ) : (
@@ -186,7 +351,7 @@ export default function ManageAdmins() {
                               variant="ghost"
                               size="icon"
                               onClick={() => setSelectedAdmin(adm)}
-                              className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                              className="h-8 w-8 hover:bg-destructive/15 hover:text-destructive"
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -207,17 +372,19 @@ export default function ManageAdmins() {
         open={!!selectedAdmin}
         onOpenChange={(open) => !open && setSelectedAdmin(null)}
       >
-        <AlertDialogContent className="bg-card border-2 border-border">
+        <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle className="font-display">Remove Admin Role?</AlertDialogTitle>
+            <AlertDialogTitle className="font-display uppercase tracking-[0.12em] text-ivory">
+              Remove Admin Role?
+            </AlertDialogTitle>
             <AlertDialogDescription className="font-body">
               Are you sure you want to remove the admin role for{" "}
-              <strong>{selectedAdmin?.roll_no || selectedAdmin?.id}</strong>?
+              <strong className="text-gold">{selectedAdmin?.roll_no || selectedAdmin?.id}</strong>?
             </AlertDialogDescription>
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel className="font-body">Cancel</AlertDialogCancel>
+            <AlertDialogCancel className="font-display">Cancel</AlertDialogCancel>
 
             <AlertDialogAction
               onClick={handleDelete}

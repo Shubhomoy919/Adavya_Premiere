@@ -21,8 +21,9 @@ updates instantly for everyone watching — no refresh needed.
 
 ## Games Tracked
 
-Plank Challenge, Flour Passing, Lucky Number, Cup Pyramid, 
-Carrom, Bindi Game, Dumbbell Hold, Bottle Flip
+Cup Pyramid Challenge, Straw & Bottle Challenge, Balloon & Cup Group Challenge, 
+Bullseye Challenge, Marble Maze Challenge, Dumbbell Challenge, 
+Don't Sit Together!, Balloon Race
 
 ## Tech Stack
 

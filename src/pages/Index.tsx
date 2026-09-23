@@ -5,7 +5,7 @@ import { useStudents } from "@/hooks/useStudents";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { useEffect } from "react";
-import { Loader2 } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 const Index = () => {
   const { session, role, loading: authLoading } = useAuth();
@@ -19,25 +19,30 @@ const Index = () => {
 
   if (authLoading || !session) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-gold" />
+      <div className="min-h-screen flex flex-col items-center justify-center gap-5 bg-aura">
+        <div className="reel-spinner" />
+        <p className="font-display text-xs uppercase tracking-[0.3em] text-gold/70">
+          Adavya Premiere
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden max-w-full">
+    <div className="min-h-screen flex flex-col overflow-x-hidden max-w-full">
       <Header />
 
-      <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-8 flex-1 w-full max-w-full overflow-x-hidden">
+      <main className="container mx-auto px-3 sm:px-4 py-5 sm:py-10 space-y-5 sm:space-y-8 flex-1 w-full max-w-full overflow-x-hidden">
 
         {/* Only show this if user is MAIN ADMIN */}
         {role === "main" && (
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-end">
             <Button
               onClick={() => (window.location.href = "/manage-admins")}
-              className="bg-[#3b2f2f] text-white hover:bg-[#2f2424]"
+              variant="elegant"
+              className="uppercase tracking-[0.15em]"
             >
+              <ShieldCheck className="h-4 w-4" />
               Manage Admins
             </Button>
           </div>
@@ -56,10 +61,10 @@ const Index = () => {
         />
       </main>
 
-      <footer className="border-t border-border py-4 sm:py-6 mt-auto w-full max-w-full">
+      <footer className="film-strip mt-auto w-full max-w-full py-4 sm:py-6">
         <div className="container mx-auto px-3 sm:px-4 text-center">
-          <p className="font-body text-xs sm:text-sm text-muted-foreground">
-            © 2025 Adavya Retroverse • Freshers Event
+          <p className="font-display text-[0.65rem] sm:text-xs uppercase tracking-[0.25em] text-gold/70">
+            © 2026 Adavya Premiere • Freshers Event
           </p>
         </div>
       </footer>

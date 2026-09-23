@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ["Playfair Display", "serif"],
-        body: ["Crimson Text", "serif"],
+        display: ["Cinzel", "serif"],
+        body: ["DM Sans", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -51,7 +51,21 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        /* Premiere palette — mirrors the custom properties in index.css.
+           The brand red is exposed as `carpet` rather than `red` so the
+           default Tailwind red-* scale (used by the toast) stays intact. */
         gold: "hsl(var(--gold))",
+        "gold-light": "hsl(var(--gold-light))",
+        "gold-dark": "hsl(var(--gold-dark))",
+        carpet: "hsl(var(--red))",
+        "carpet-bright": "hsl(var(--red-bright))",
+        "carpet-dark": "hsl(var(--red-dark))",
+        crimson: "hsl(var(--crimson))",
+        velvet: "hsl(var(--velvet))",
+        onyx: "hsl(var(--black))",
+        charcoal: "hsl(var(--charcoal))",
+        ivory: "hsl(var(--ivory))",
+        silver: "hsl(var(--silver))",
         burgundy: "hsl(var(--burgundy))",
         cream: "hsl(var(--cream))",
         sepia: "hsl(var(--sepia))",
@@ -74,9 +88,21 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        vintage: "var(--shadow-vintage)",
+        premiere: "var(--shadow-premiere)",
         card: "var(--shadow-card)",
-        elegant: "var(--shadow-elegant)",
+        red: "var(--shadow-red)",
+        gold: "var(--shadow-gold)",
+        /* Legacy aliases kept so existing `shadow-vintage` / `shadow-elegant`
+           usages resolve to the new premiere shadows. */
+        vintage: "var(--shadow-premiere)",
+        elegant: "var(--shadow-gold)",
+      },
+      backgroundImage: {
+        "gradient-premiere": "var(--gradient-premiere)",
+        "gradient-red": "var(--gradient-red)",
+        "gradient-velvet": "var(--gradient-velvet)",
+        "gradient-gold": "var(--gradient-gold)",
+        "gradient-spotlight": "var(--gradient-spotlight)",
       },
       keyframes: {
         "accordion-down": {
@@ -87,20 +113,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        "slide-up": {
-          from: { opacity: "0", transform: "translateY(20px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.5s ease-out forwards",
-        "slide-up": "slide-up 0.4s ease-out forwards",
       },
     },
   },

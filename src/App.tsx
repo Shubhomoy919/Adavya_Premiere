@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/lib/auth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 import Index from "./pages/Index";           // Points Page
 import Login from "./pages/Login";           // Admin Login Page
@@ -28,11 +29,25 @@ const App = () => (
             {/* Public Leaderboard */}
             <Route path="/leaderboard" element={<LeaderboardPage />} />
 
-            {/* Points (default admin home) */}
-            <Route path="/points" element={<Index />} />
+            {/* Points (default admin home) - admins and volunteers */}
+            <Route
+              path="/points"
+              element={
+                <ProtectedRoute allow={["main", "admin", "volunteer"]}>
+                  <Index />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Main Admin page */}
-            <Route path="/manage-admins" element={<ManageAdmins />} />
+            <Route
+              path="/manage-admins"
+              element={
+                <ProtectedRoute allow={["main"]}>
+                  <ManageAdmins />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Redirect root "/" → login */}
             <Route path="/" element={<Navigate to="/login" />} />

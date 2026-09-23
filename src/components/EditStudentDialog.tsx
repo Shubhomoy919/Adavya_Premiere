@@ -49,14 +49,16 @@ export function EditStudentDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-card border-2 border-border shadow-elegant mx-4 sm:mx-auto max-w-[calc(100vw-2rem)] sm:max-w-lg">
+      <DialogContent className="mx-4 sm:mx-auto max-w-[calc(100vw-2rem)] sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle className="font-display text-lg sm:text-xl">Edit Student</DialogTitle>
+          <DialogTitle className="font-display text-lg sm:text-xl uppercase tracking-[0.12em] text-ivory">
+            Edit Student
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
           <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="edit-rollNo" className="font-body text-xs sm:text-sm text-muted-foreground">
+            <Label htmlFor="edit-rollNo" className="font-display text-xs uppercase tracking-[0.15em] text-gold/80">
               Roll Number
             </Label>
             <Input
@@ -64,12 +66,12 @@ export function EditStudentDialog({
               value={rollNo}
               onChange={(e) => setRollNo(e.target.value)}
               required
-              className="uppercase text-base"
+              className="font-body uppercase text-base"
             />
           </div>
 
           <div className="space-y-1.5 sm:space-y-2">
-            <Label htmlFor="edit-points" className="font-body text-xs sm:text-sm text-muted-foreground">
+            <Label htmlFor="edit-points" className="font-display text-xs uppercase tracking-[0.15em] text-gold/80">
               Total Points
             </Label>
             <Input
@@ -79,7 +81,7 @@ export function EditStudentDialog({
               value={points}
               onChange={(e) => setPoints(e.target.value)}
               required
-              className="text-base"
+              className="font-mono text-base tracking-widest text-gold-light"
             />
           </div>
 
@@ -88,7 +90,7 @@ export function EditStudentDialog({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto uppercase tracking-[0.12em]"
             >
               Cancel
             </Button>
@@ -96,7 +98,7 @@ export function EditStudentDialog({
               type="submit"
               variant="vintage"
               disabled={isSubmitting || !rollNo.trim()}
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto uppercase tracking-[0.12em]"
             >
               {isSubmitting ? (
                 <>
